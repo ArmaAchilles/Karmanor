@@ -1,1 +1,1 @@
-web: gunicorn -w 4 -b "0.0.0.0:$PORT" app:karmanor
+web: gunicorn -w 4 -b "0.0.0.0:$PORT" karmanor:app
