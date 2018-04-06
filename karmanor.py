@@ -24,7 +24,7 @@ def verify_signatures():
         abort(500)
 
     # Get the passed header signature
-    header_signature = request.header.get('X-Hub-Signature')
+    header_signature = request.headers.get('X-Hub-Signature')
 
     # If the header hasn't been passed
     if header_signature is None:
@@ -41,7 +41,7 @@ def verify_signatures():
 
     # Compare the digests
     isRequestFromGitHub = hmac.compare_digest(
-        str(mac), str(signature.split('=')[1]))
+        str(mac), str(signature))
 
     return isRequestFromGitHub
 
