@@ -15,6 +15,15 @@ app = Flask(__name__)
 
 
 @app.route("/", methods=["POST"])
+def index():
+    isRequestFromGitHub = verify_signatures()
+    # Don't abort if the request came from localhost (for testing purposes)
+    if ((not isRequestFromGitHub) and (request.remote_addr != "127.0.0.1")):
+        abort(403)
+
+    return "It's working!"
+
+
 def verify_signatures():
     # Get enviornment variable, GITHUB_TOKEN. Used for verification of GitHub's signature
     GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
@@ -44,14 +53,6 @@ def verify_signatures():
         str(mac), str(signature))
 
     return isRequestFromGitHub
-
-
-def index():
-    isRequestFromGitHub = verify_signatures()
-    if not isRequestFromGitHub:
-        abort(403)
-
-    return "It's working!"
 
 
 @app.errorhandler(500)
