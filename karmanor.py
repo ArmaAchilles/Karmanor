@@ -3,6 +3,8 @@ import logging
 import json
 import os
 import hmac
+import sys
+from ipaddress import ip_network, ip_address
 
 # Import 3rd party libraries
 from flask import Flask, request, abort
@@ -16,12 +18,15 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
+
     isRequestFromGitHub = verify_signatures()
     # Don't abort if the request came from localhost (for testing purposes)
     if ((not isRequestFromGitHub) and (request.remote_addr != "127.0.0.1")):
+        logging.exception(
+            "Request did not come from GitHub! IP: {}".format(request.remote_addr))
         abort(403)
 
-    return "It's working!"
+    return "Running Karmanor!"
 
 
 def verify_signatures():
@@ -52,7 +57,34 @@ def verify_signatures():
     isRequestFromGitHub = hmac.compare_digest(
         str(mac), str(signature))
 
+    # If already false, why check?
+    if not isRequestFromGitHub:
+        return isRequestFromGitHub
+    # If not then check if the request came from GitHub server IPs or localhost
+    else:
+        verify_request_ip()
+
     return isRequestFromGitHub
+
+
+def verify_request_ip():
+    # Get IPs from GitHub API servers
+    whitelist = requests.get("https://api.github.com/meta").json()["hooks"]
+
+    # Add localhost to the valid IPs (for testing)
+    whitelist.append("127.0.0.1")
+
+    source_ip = ip_address(u'{}'.format(request.access_route[0]))
+
+    # Check if the IP is in the whitelist
+    for valid_ip in whitelist:
+        if source_ip in ip_network(valid_ip):
+            break
+    else:
+        logging.error("IP {} not allowed!".format(request.remote_addr))
+        return False
+
+    return True
 
 
 @app.errorhandler(500)
