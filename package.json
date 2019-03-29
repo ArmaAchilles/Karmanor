@@ -4,7 +4,10 @@
   "description": "An Electron app which builds source code from ArmA 3 PBOs and runs the game with the built PBOs and runs testing functionality.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && electron ./dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,8 @@
   },
   "homepage": "https://github.com/ArmaAchilles/Karmanor#readme",
   "devDependencies": {
-    "electron": "^4.1.3"
+    "electron": "^4.1.3",
+    "tslint": "^5.14.0",
+    "typescript": "^3.4.1"
   }
 }
