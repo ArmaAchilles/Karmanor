@@ -2,12 +2,15 @@
   "name": "karmanor",
   "version": "1.0.0",
   "description": "An Electron app which builds source code from ArmA 3 PBOs and runs the game with the built PBOs and runs testing functionality.",
-  "main": "main.js",
+  "main": "app/dist/js/main.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "npm run build && electron ./dist/main.js"
+    "dev": "npm run development",
+    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js && npm start",
+    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "prod": "npm run production",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
@@ -20,8 +23,24 @@
   },
   "homepage": "https://github.com/ArmaAchilles/Karmanor#readme",
   "devDependencies": {
+    "@types/electron-devtools-installer": "^2.2.0",
+    "cross-env": "^5.2.0",
     "electron": "^4.1.3",
+    "electron-devtools-installer": "^2.2.4",
+    "laravel-mix": "^4.0.15",
+    "materialize-css": "^1.0.0-rc.2",
+    "node-sass": "^4.11.0",
+    "resolve-url-loader": "^2.3.1",
+    "sass": "^1.17.3",
+    "sass-loader": "^7.1.0",
+    "ts-loader": "^5.3.3",
     "tslint": "^5.14.0",
-    "typescript": "^3.4.1"
-  }
+    "typescript": "^3.4.1",
+    "vue": "^2.6.10",
+    "vue-devtools": "^5.0.0-beta.1",
+    "vue-electron": "^1.0.6",
+    "vue-router": "^3.0.2",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "dependencies": {}
 }
