@@ -1,7 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-require('materialize-css');
+try {
+    (<any>window).Popper = require('popper.js').default;
+    (<any>window).$ = (<any>window).jQuery = require('jquery');
+
+    require('bootstrap');
+} catch (e) {};
+
+(<any>window).axios = require('axios');
 
 import router from './routes';
 
