@@ -19,7 +19,7 @@
                             </template>
                         </card-component>
 
-                        <card-component level="warning">
+                        <card-component status="warning">
                             <template slot="header">A chart goes here.</template>
                             <template slot="title">Email Subscriptions</template>
 
@@ -30,7 +30,7 @@
                             </template>
                         </card-component>
 
-                        <card-component level="danger">
+                        <card-component status="danger">
                             <template slot="header">A chart goes here.</template>
                             <template slot="title">Completed Tasks</template>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="col-xl-4 col-lg-12">
         <div class="card card-chart">
-            <div name="header" v-show="hasHeader" class="card-header" :class="status">
+            <div name="header" v-show="hasHeader" class="card-header" :class="statusClass">
                 <slot name="header"></slot>
             </div>
 
@@ -24,15 +24,15 @@
 
 <script>
     export default {
-        props: ['level'],
+        props: ['status'],
 
         computed: {
-            status() {
-                if (this.level !== '' && this.level !== undefined) {
-                    return `card-header-${this.level}`;
+            statusClass() {
+                if (this.status !== '' && this.status !== undefined) {
+                    return `card-header-${this.status}`;
                 }
 
-                if (this.level === '' || this.level === undefined) {
+                if (this.status === '' || this.status === undefined) {
                     return 'card-header-success';
                 }
             },
