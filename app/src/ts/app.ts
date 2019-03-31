@@ -21,6 +21,7 @@ Vue.component('flash-component', require('./components/flash-component.vue').def
 Vue.component('sidebar-component', require('./components/sidebar-component.vue').default);
 Vue.component('navbar-component', require('./components/navbar-component.vue').default);
 Vue.component('card-component', require('./components/card-component.vue').default);
+Vue.component('small-card-component', require('./components/small-card-component.vue').default);
 
 new Vue({
     el: '#app',
