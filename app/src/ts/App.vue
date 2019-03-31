@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Flash></Flash>
         <router-view></router-view>
     </div>
 </template>

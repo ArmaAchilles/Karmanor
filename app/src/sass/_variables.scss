@@ -1,5 +1,5 @@
 // Body
-$body-bg: #f8fafc;
+$body-bg: #1a2035;
 
 // Typography
 $font-size-base: 0.9rem;
@@ -17,5 +17,6 @@ $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
 
-$dark-background: #1a2035 !default;
-$sidebar-background: #1f283e !default;
+$theme-colors: (
+    "primary": #2BA8A8
+)
