@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Flash></Flash>
+        <flash-component></flash-component>
         <router-view></router-view>
     </div>
 </template>

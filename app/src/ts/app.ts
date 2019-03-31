@@ -16,8 +16,11 @@ import router from './routes';
 
 Vue.use(VueRouter);
 
-Vue.component('App', require('./App.vue').default);
-Vue.component('Flash', require('./components/Flash.vue').default);
+Vue.component('app-component', require('./app-component.vue').default);
+Vue.component('flash-component', require('./components/flash-component.vue').default);
+Vue.component('sidebar-component', require('./components/sidebar-component.vue').default);
+Vue.component('navbar-component', require('./components/navbar-component.vue').default);
+Vue.component('card-component', require('./components/card-component.vue').default);
 
 new Vue({
     el: '#app',

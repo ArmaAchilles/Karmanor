@@ -5,7 +5,7 @@ export default () : VueRouter => {
         routes: [
             {
                 path: '/',
-                component: require('./components/HomeView.vue').default
+                component: require('./components/homeView.vue').default
             }
         ]
     });
