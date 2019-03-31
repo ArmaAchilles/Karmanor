@@ -23,7 +23,9 @@ function createWindow() {
     });
 
     if (process.env.NODE_ENV !== 'production') {
-        installExtension(VUEJS_DEVTOOLS).then(name => console.log(name)).catch(err => console.error(err));
+        installExtension(VUEJS_DEVTOOLS).then(() => {
+            mainWindow.webContents.openDevTools();
+        }).catch(err => console.error(err));
     }
 }
 

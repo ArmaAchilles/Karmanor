@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ArmaAchilles/Karmanor#readme",
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/multiparty": "0.0.32",
     "axios": "^0.18.0",
@@ -47,5 +48,7 @@
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.6.10"
   },
-  "dependencies": {}
+  "dependencies": {
+    "css-loader": "^2.1.1"
+  }
 }

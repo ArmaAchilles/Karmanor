@@ -1,6 +1,10 @@
 @import './variables';
 
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap';
+
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+@import './material-dashboard.scss';
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
@@ -9,3 +13,18 @@
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
+// main {
+//     @include media-breakpoint-up(md) {
+//         height: 100vh;
+//     }
+// }
+
+// .sidebar {
+//     @include media-breakpoint-up(md) {
+//         @include make-container;
+//     }
+
+//     // background-color: rgba($color: map-get($map: $theme-colors, $key: 'primary'), $alpha: .5);
+//     // background-image: url('../images/sidebar-2.jpg');
+// }

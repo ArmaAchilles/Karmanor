@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+require('@fortawesome/fontawesome-free');
+
 try {
     (<any>window).Popper = require('popper.js').default;
     (<any>window).$ = (<any>window).jQuery = require('jquery');

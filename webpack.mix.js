@@ -8,6 +8,9 @@ mix.webpackConfig({
     }
 });
 
+mix.options({
+    processCssUrls: false
+});
 
 mix.ts('app/src/ts/main.ts', 'app/dist/js')
     .ts('app/src/ts/app.ts', 'app/dist/js')
@@ -15,4 +18,6 @@ mix.ts('app/src/ts/main.ts', 'app/dist/js')
         includePaths: ['node_modules']
     })
     .copy('app/src/html', 'app/dist/html', false)
+    .copy('app/src/images', 'app/dist/images', false)
+    .copy('app/src/fonts', 'app/dist/webfonts', false)
     .setPublicPath('app/dist');
