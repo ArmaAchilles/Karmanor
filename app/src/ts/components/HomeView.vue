@@ -12,7 +12,7 @@
                             <template slot="header">A chart goes here.</template>
                             <template slot="title">Daily Sales</template>
 
-                            <i class="fas fa-arrow-up"></i> <span class="text-success">55%</span> increase in today sales.
+                            <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
 
                             <template slot="footer">
                                 <i class="fas fa-clock"></i> updated 4 minutes ago
