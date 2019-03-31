@@ -9,11 +9,10 @@
                 <div class="card-body">
                     <span>An Electron app which builds source code from ArmA 3 PBOs and runs the game with the built PBOs and runs testing functionality.</span>
 
-                    <div v-show="responseData.length">
+                    <div>
                         <ul>
-                            <li v-for="(data, key) in responseData" :key="key">
-                                I've got some data, {{ data }}!
-                            </li>
+                            <li>{{ accessToken }}</li>
+                            <li>{{ JSON.stringify(zip) }}</li>
                         </ul>
                     </div>
                 </div>
@@ -28,7 +27,7 @@
 </template>
 
 <script>
-    import * as http from 'http';
+    import Server from '../server';
 
     export default {
         name: 'home',
@@ -37,49 +36,32 @@
             return {
                 serverStarted: false,
                 server: {},
-                responseData: []
+                accessToken: '',
+                zip: {},
             }
         },
 
         methods: {
             startServer() {
-                let postedData;
+                this.server = new Server(8080);
 
-                let server = http.createServer((request, response) => {
-                    request.on('data', data => {
-                        console.dir(data);
-
-                        postedData += data;
-                    });
-
-                    request.on('end', () => {
-                        console.log(postedData);
-
-                        response.writeHead(200, {'Content-Type': 'text/html'});
-                        response.end();
-                    });
-                }).listen(8080);
-
-                server.on('listening', () => {
+                window.events.$on('server-started', () => {
                     this.serverStarted = true;
-                    flash('Server started!');
-                });
+                })
 
-                server.on('connection', () => {
-                    console.log('I hear someone!');
+                window.events.$on('server-data-received', () => {
+                    this.accessToken = this.server.accessToken;
+                    this.zip = this.server.zip;
                 });
-
-                server.on('close', () => {
-                    this.serverStarted = false;
-                    flash('Server stopped!');
-                });
-
-                this.server = server;
             },
 
             stopServer() {
-                this.server.close();
-            }
+                window.events.$on('server-stopped', () => {
+                    this.serverStarted = false;
+                });
+
+                this.server.stop();
+            },
         }
     }
 </script>

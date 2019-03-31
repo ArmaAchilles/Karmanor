@@ -24,6 +24,7 @@
   "homepage": "https://github.com/ArmaAchilles/Karmanor#readme",
   "devDependencies": {
     "@types/electron-devtools-installer": "^2.2.0",
+    "@types/multiparty": "0.0.32",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
@@ -31,6 +32,7 @@
     "electron-devtools-installer": "^2.2.4",
     "jquery": "^3.3.1",
     "laravel-mix": "^4.0.15",
+    "multiparty": "^4.2.1",
     "node-sass": "^4.11.0",
     "popper.js": "^1.14.7",
     "resolve-url-loader": "^2.3.1",

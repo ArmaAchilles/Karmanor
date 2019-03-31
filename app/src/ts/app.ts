@@ -17,12 +17,6 @@ Vue.use(VueRouter);
 Vue.component('App', require('./App.vue').default);
 Vue.component('Flash', require('./components/Flash.vue').default);
 
-(<any>window).events = new Vue();
-
-(<any>window).flash = (message:string, level:string = 'success') => {
-    (<any>window).events.$emit('flash', { message, level });
-};
-
 new Vue({
     el: '#app',
     router: router()
