@@ -9,7 +9,8 @@
                 <div class="container-fluid">
                     <div class="row">
                         <card-component>
-                            <template slot="header">A chart goes here.</template>
+                            <template slot="header"><line-chart-component></line-chart-component></template>
+
                             <template slot="title">Daily Sales</template>
 
                             <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
@@ -20,7 +21,7 @@
                         </card-component>
 
                         <card-component status="warning">
-                            <template slot="header">A chart goes here.</template>
+                            <template slot="header"><line-chart-component type="bar"></line-chart-component></template>
                             <template slot="title">Email Subscriptions</template>
 
                             Last Campaign Performance
@@ -31,7 +32,7 @@
                         </card-component>
 
                         <card-component status="danger">
-                            <template slot="header">A chart goes here.</template>
+                            <template slot="header"><line-chart-component></line-chart-component></template>
                             <template slot="title">Completed Tasks</template>
 
                             Last Campaign Performance
@@ -145,6 +146,6 @@
 
                 this.server.stop();
             },
-        }
+        },
     }
 </script>

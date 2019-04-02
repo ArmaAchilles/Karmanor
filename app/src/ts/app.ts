@@ -23,6 +23,8 @@ Vue.component('navbar-component', require('./components/navbar-component.vue').d
 Vue.component('card-component', require('./components/card-component.vue').default);
 Vue.component('small-card-component', require('./components/small-card-component.vue').default);
 
+Vue.component('line-chart-component', require('./components/charts/line-chart-component.vue').default);
+
 new Vue({
     el: '#app',
     router: router()
