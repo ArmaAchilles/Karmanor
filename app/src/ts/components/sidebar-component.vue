@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="../images/sidebar-2.jpg">
+    <div class="sidebar" data-color="azure" data-background-color="black" data-image="../images/sidebar-2.jpg">
         <div class="logo">
             <a href="http://www.creative-tim.com" class="simple-text logo-normal">Karmanor</a>
         </div>
