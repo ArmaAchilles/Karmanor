@@ -1,9 +1,5 @@
 <template>
-    <div>
-        <div class="ct-chart" ref="chart"></div>
-
-        <button class="btn btn-primary" @click="changeData()">Change some data</button>
-    </div>
+    <div class="ct-chart" ref="chart"></div>
 </template>
 
 <script>
@@ -16,6 +12,22 @@
                 default() {
                     return 'line';
                 },
+            },
+
+            labels: {
+                type: Array,
+                default() {
+                    return ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+                }
+            },
+
+            series: {
+                type: Array,
+                default() {
+                    return [
+                        [12, 17, 7, 17, 23, 18, 38],
+                    ];
+                }
             },
 
             options: {
@@ -41,11 +53,6 @@
         data() {
             return {
                 chart: null,
-                // TODO: Make these actually passable from the parent component (props don't play nicely with watchers)
-                series: [
-                    [12, 17, 7, 17, 23, 18, 38],
-                ],
-                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
             }
         },
 
@@ -82,10 +89,6 @@
             refreshChart() {
                 this.chart.update(this.data, this.options);
             },
-
-            changeData() {
-                this.series[0][0] += 1;
-            },
         },
 
         watch: {
@@ -93,7 +96,6 @@
                 this.refreshChart();
             },
 
-            // TODO: This watcher doesn't work, probably due to the multiple array nesting.
             series: {
                 deep: true,
                 handler() {
