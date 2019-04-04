@@ -16,6 +16,9 @@ try {
     $(document).ready(function () { $('body').bootstrapMaterialDesign(); });
 } catch (e) { };
 
+// Import flash messaging
+import './flash';
+
 // Import Axios
 (<any>window).axios = require('axios');
 

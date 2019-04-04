@@ -54,7 +54,7 @@
                 }).then(isSaved => {
                     isSaved ? flash('Settings saved!') : flash(`You didn't change anything!`, 'info');
                 }).catch(message => {
-                    flash(message, 'danger');
+                    flash(message, 'danger', true);
                 });
             },
         },
