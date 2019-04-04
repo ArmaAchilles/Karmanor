@@ -25,8 +25,7 @@
 </template>
 
 <script>
-    import * as _ from 'lodash';
-    import * as Settings from 'electron-settings';
+    import Settings from '../settings';
 
     export default {
         data() {
@@ -37,10 +36,8 @@
         },
 
         mounted() {
-            if (Settings.has('server-settings')) {
-                this.port = Settings.get('server-settings.port', '');
-                this.accessToken = Settings.get('server-settings.accessToken', '');
-            }
+            this.port = Settings.get('server-settings.port', '');
+            this.accessToken = Settings.get('server-settings.accessToken', '');
         },
 
         computed: {
@@ -51,18 +48,14 @@
 
         methods: {
             saveSettings() {
-                let data = {
+                Settings.save('server-settings', {
                     port: this.port,
                     accessToken: this.accessToken,
-                }
-
-                Settings.set('server-settings', data);
-
-                if (_.isEqual(Settings.get('server-settings'), data)) {
-                    flash('Settings saved!');
-                } else {
-                    flash('Settings failed to save!', 'danger');
-                }
+                }).then(isSaved => {
+                    isSaved ? flash('Settings saved!') : flash(`You didn't change anything!`, 'info');
+                }).catch(message => {
+                    flash(message, 'danger');
+                });
             },
         },
     }
