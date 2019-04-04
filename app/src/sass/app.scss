@@ -15,3 +15,13 @@
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+.btn {
+    &:disabled {
+        cursor: default;
+
+        &:hover {
+            box-shadow: 0px 0px 0px 0px !important;
+        }
+    }
+}
