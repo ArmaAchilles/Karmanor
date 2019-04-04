@@ -16,14 +16,9 @@ import router from './routes';
 
 Vue.use(VueRouter);
 
-Vue.component('app-component', require('./app-component.vue').default);
-Vue.component('flash-component', require('./components/flash-component.vue').default);
-Vue.component('sidebar-component', require('./components/sidebar-component.vue').default);
-Vue.component('navbar-component', require('./components/navbar-component.vue').default);
-Vue.component('card-component', require('./components/card-component.vue').default);
-Vue.component('small-card-component', require('./components/small-card-component.vue').default);
-
-Vue.component('chart-component', require('./components/chart-component.vue').default);
+// Auto register all Vue components
+const files = require.context('./', true, /\.vue$/i);
+files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 new Vue({
     el: '#app',
