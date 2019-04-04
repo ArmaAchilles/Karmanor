@@ -1,111 +1,101 @@
 <template>
-    <div class="wrapper">
-        <sidebar-component></sidebar-component>
+    <div class="container-fluid">
+        <div class="row">
+            <card-component>
+                <template slot="header"><chart-component></chart-component></template>
 
-        <div class="main-panel">
-            <navbar-component></navbar-component>
+                <template slot="title">Daily Sales</template>
 
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <card-component>
-                            <template slot="header"><chart-component></chart-component></template>
+                <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
 
-                            <template slot="title">Daily Sales</template>
+                <template slot="footer">
+                    <i class="fas fa-clock"></i> updated 4 minutes ago
+                </template>
+            </card-component>
 
-                            <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
+            <card-component status="warning">
+                <template slot="header"><chart-component type="bar"></chart-component></template>
+                <template slot="title">Email Subscriptions</template>
 
-                            <template slot="footer">
-                                <i class="fas fa-clock"></i> updated 4 minutes ago
-                            </template>
-                        </card-component>
+                Last Campaign Performance
 
-                        <card-component status="warning">
-                            <template slot="header"><chart-component type="bar"></chart-component></template>
-                            <template slot="title">Email Subscriptions</template>
+                <template slot="footer">
+                    <i class="fas fa-clock"></i> campaign sent 2 days ago
+                </template>
+            </card-component>
 
-                            Last Campaign Performance
+            <card-component status="danger">
+                <template slot="header"><chart-component></chart-component></template>
+                <template slot="title">Completed Tasks</template>
 
-                            <template slot="footer">
-                                <i class="fas fa-clock"></i> campaign sent 2 days ago
-                            </template>
-                        </card-component>
+                Last Campaign Performance
 
-                        <card-component status="danger">
-                            <template slot="header"><chart-component></chart-component></template>
-                            <template slot="title">Completed Tasks</template>
+                <template slot="footer">
+                    <i class="fas fa-clock"></i> campaign sent 2 days ago
+                </template>
+            </card-component>
+        </div>
 
-                            Last Campaign Performance
+        <div class="row">
+            <small-card-component status="warning">
+                <i slot="icon" class="fas fa-copy"></i>
 
-                            <template slot="footer">
-                                <i class="fas fa-clock"></i> campaign sent 2 days ago
-                            </template>
-                        </card-component>
-                    </div>
+                Used Space
 
-                    <div class="row">
-                        <small-card-component status="warning">
-                            <i slot="icon" class="fas fa-copy"></i>
+                <template slot="title">
+                    49/50 <small>GB</small>
+                </template>
 
-                            Used Space
+                <template slot="footer">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                    <a href="#" class="text-warning">Get More Space...</a>
+                </template>
+            </small-card-component>
 
-                            <template slot="title">
-                                49/50 <small>GB</small>
-                            </template>
+            <small-card-component>
+                <i slot="icon" class="fas fa-dollar-sign"></i>
 
-                            <template slot="footer">
-                                <i class="fas fa-exclamation-triangle text-warning"></i>
-                                <a href="#" class="text-warning">Get More Space...</a>
-                            </template>
-                        </small-card-component>
+                Revenue
 
-                        <small-card-component>
-                            <i slot="icon" class="fas fa-dollar-sign"></i>
+                <template slot="title">
+                    $34,245
+                </template>
 
-                            Revenue
+                <template slot="footer">
+                    <i class="fas fa-calendar-alt"></i>
+                    Last 24 Hours
+                </template>
+            </small-card-component>
 
-                            <template slot="title">
-                                $34,245
-                            </template>
+            <small-card-component status="danger">
+                <i slot="icon" class="fas fa-info-circle"></i>
 
-                            <template slot="footer">
-                                <i class="fas fa-calendar-alt"></i>
-                                Last 24 Hours
-                            </template>
-                        </small-card-component>
+                Fixed issues
 
-                        <small-card-component status="danger">
-                            <i slot="icon" class="fas fa-info-circle"></i>
+                <template slot="title">
+                    75
+                </template>
 
-                            Fixed issues
+                <template slot="footer">
+                    <i class="fas fa-tag"></i>
+                    Tracked from GitHub
+                </template>
+            </small-card-component>
 
-                            <template slot="title">
-                                75
-                            </template>
+            <small-card-component status="info">
+                <i slot="icon" class="fab fa-twitter"></i>
 
-                            <template slot="footer">
-                                <i class="fas fa-tag"></i>
-                                Tracked from GitHub
-                            </template>
-                        </small-card-component>
+                Followers
 
-                        <small-card-component status="info">
-                            <i slot="icon" class="fab fa-twitter"></i>
+                <template slot="title">
+                    +245
+                </template>
 
-                            Followers
-
-                            <template slot="title">
-                                +245
-                            </template>
-
-                            <template slot="footer">
-                                <i class="fas fa-stopwatch"></i>
-                                Just Updated
-                            </template>
-                        </small-card-component>
-                    </div>
-                </div>
-            </div>
+                <template slot="footer">
+                    <i class="fas fa-stopwatch"></i>
+                    Just Updated
+                </template>
+            </small-card-component>
         </div>
     </div>
 </template>
