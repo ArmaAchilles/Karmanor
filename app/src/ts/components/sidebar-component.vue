@@ -1,17 +1,12 @@
 <template>
     <div class="sidebar" data-color="azure" data-background-color="black" data-image="../images/sidebar-2.jpg">
         <div class="logo">
-            <a href="http://www.creative-tim.com" class="simple-text logo-normal">Karmanor</a>
+            <span class="simple-text logo-normal">Karmanor</span>
         </div>
 
         <div class="sidebar-wrapper">
             <ul class="nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="./dashboard.html">
-                        <i class="fas fa-chart-line"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
+                <sidebar-link-component to="/" icon="fa-chart-line">Dashboard</sidebar-link-component>
 
                 <li class="nav-item">
                     <a class="nav-link" href="./user.html">
