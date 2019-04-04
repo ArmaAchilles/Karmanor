@@ -7,7 +7,13 @@ export default () : VueRouter => {
                 path: '/',
                 component: require('./views/home-view.vue').default,
                 name: 'Dashboard'
+            },
+            {
+                path: '/settings',
+                component: require('./views/settings-view.vue').default,
+                name: 'Settings'
             }
-        ]
+        ],
+        linkExactActiveClass: 'active'
     });
 };
