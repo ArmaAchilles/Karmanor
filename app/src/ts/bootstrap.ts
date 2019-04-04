@@ -4,10 +4,20 @@ require('@fortawesome/fontawesome-free');
 // Bootstrap 4 requirements
 try {
     (<any>window).Popper = require('popper.js').default;
-    (<any>window).$ = (<any>window).jQuery = require('jquery');
+
+    const $ = require('jquery');
+    (<any>window).$ = (<any>window).jQuery = $;
 
     require('bootstrap');
+
+    // Import Material Design JS
+    require('bootstrap-material-design');
+
+    $(document).ready(function () { $('body').bootstrapMaterialDesign(); });
 } catch (e) { };
 
 // Import Axios
 (<any>window).axios = require('axios');
+
+// Add lodash
+(<any>window)._ = require('lodash');

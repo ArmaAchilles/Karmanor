@@ -6,7 +6,9 @@
 
                 <template slot="title">Daily Sales</template>
 
-                <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
+                <template slot="category">
+                    <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
+                </template>
 
                 <template slot="footer">
                     <i class="fas fa-clock"></i> updated 4 minutes ago
@@ -17,7 +19,9 @@
                 <template slot="header"><chart-component type="bar"></chart-component></template>
                 <template slot="title">Email Subscriptions</template>
 
-                Last Campaign Performance
+                <template slot="category">
+                    Last Campaign Performance
+                </template>
 
                 <template slot="footer">
                     <i class="fas fa-clock"></i> campaign sent 2 days ago
@@ -28,7 +32,9 @@
                 <template slot="header"><chart-component></chart-component></template>
                 <template slot="title">Completed Tasks</template>
 
-                Last Campaign Performance
+                <template slot="category">
+                    Last Campaign Performance
+                </template>
 
                 <template slot="footer">
                     <i class="fas fa-clock"></i> campaign sent 2 days ago

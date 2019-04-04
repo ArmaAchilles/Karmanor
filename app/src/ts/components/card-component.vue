@@ -10,9 +10,9 @@
                     <slot class="card-title" name="title"></slot>
                 </h4>
 
-                <p class="card-category">
-                    <slot></slot>
-                </p>
+                <p class="card-category"><slot name="category"></slot></p>
+
+                <slot></slot>
             </div>
 
             <div class="card-footer" v-show="hasFooter">
