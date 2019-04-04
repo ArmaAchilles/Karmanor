@@ -9,7 +9,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <card-component>
-                            <template slot="header"><line-chart-component></line-chart-component></template>
+                            <template slot="header"><chart-component></chart-component></template>
 
                             <template slot="title">Daily Sales</template>
 
@@ -21,7 +21,7 @@
                         </card-component>
 
                         <card-component status="warning">
-                            <template slot="header"><line-chart-component type="bar"></line-chart-component></template>
+                            <template slot="header"><chart-component type="bar"></chart-component></template>
                             <template slot="title">Email Subscriptions</template>
 
                             Last Campaign Performance
@@ -32,7 +32,7 @@
                         </card-component>
 
                         <card-component status="danger">
-                            <template slot="header"><line-chart-component></line-chart-component></template>
+                            <template slot="header"><chart-component></chart-component></template>
                             <template slot="title">Completed Tasks</template>
 
                             Last Campaign Performance
