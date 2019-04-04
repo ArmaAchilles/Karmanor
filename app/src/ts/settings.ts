@@ -16,7 +16,7 @@ export default class Settings {
             let oldData = this.get(keyPath, {});
 
             if (! _.isEqual(oldData, data)) {
-                // settings.set(keyPath, data);
+                settings.set(keyPath, data);
 
                 if (_.isEqual(this.get(keyPath), data)) {
                     resolve(true);
