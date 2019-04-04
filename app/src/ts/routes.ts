@@ -5,7 +5,8 @@ export default () : VueRouter => {
         routes: [
             {
                 path: '/',
-                component: require('./views/home-view.vue').default
+                component: require('./views/home-view.vue').default,
+                name: 'Dashboard'
             }
         ]
     });
