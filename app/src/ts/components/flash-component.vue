@@ -1,6 +1,6 @@
 <template>
     <div class="alert-wrapper" v-show="notifications.length">
-        <transition-group name="slide-fade">
+        <transition-group name="custom-classes-animation" :enter-active-class="`animated ${enterTransition}`" leave-active-class="animated slideOutRight">
             <div role="alert"
                 v-for="notification in notifications"
                 :class="`alert alert-${notification.status}`"
@@ -33,6 +33,7 @@
         data() {
             return {
                 notifications: [],
+                enterTransition: 'slideInRight',
             }
         },
 
@@ -44,6 +45,12 @@
 
         methods: {
             flash(message, status = 'success', isImportant = false) {
+                if (status === 'danger') {
+                    this.enterTransition = 'shake';
+                } else {
+                    this.enterTransition = 'slideInRight';
+                }
+
                 this.notifications.push({
                     id: Math.random().toString(36).substr(2, 9),
                     message,
@@ -90,26 +97,5 @@
 
     .close {
         margin-top: 3px;
-    }
-
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s;
-    }
-
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }
-
-    .slide-fade-enter-active {
-        transition: all .5s ease;
-    }
-
-    .slide-fade-leave-active {
-        transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-    }
-
-    .slide-fade-enter, .slide-fade-leave-to {
-        transform: translateX(10px);
-        opacity: 0;
     }
 </style>

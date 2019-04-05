@@ -30,6 +30,7 @@
     "@types/lodash": "^4.14.123",
     "@types/multiparty": "0.0.32",
     "@types/webpack-env": "^1.13.9",
+    "animate.css": "^3.7.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-material-design": "^4.1.1",
