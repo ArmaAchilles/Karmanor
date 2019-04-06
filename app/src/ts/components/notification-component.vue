@@ -60,6 +60,8 @@
             removeNotification(notification) {
                 const index = this.notifications.indexOf(notification);
                 this.notifications.splice(index, 1);
+
+                this.viewed--;
             },
 
             onOpen() {
