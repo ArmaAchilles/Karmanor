@@ -8,8 +8,6 @@ try {
     const $ = require('jquery');
     (<any>window).$ = (<any>window).jQuery = $;
 
-    require('bootstrap');
-
     // Import Material Design JS
     require('bootstrap-material-design');
 
