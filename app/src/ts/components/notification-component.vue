@@ -78,6 +78,7 @@
 <style scoped>
     a.dropdown-item:hover {
         color: #fff;
+        cursor: pointer;
     }
 </style>
 
