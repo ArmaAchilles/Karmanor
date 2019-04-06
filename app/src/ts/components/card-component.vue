@@ -1,5 +1,5 @@
 <template>
-    <div class="col-xl-4 col-lg-12">
+    <div :class="columnClass">
         <div class="card card-chart">
             <div name="header" v-show="hasHeader" class="card-header" :class="statusClass">
                 <slot name="header"></slot>
@@ -25,6 +25,11 @@
 <script>
     export default {
         props: {
+            columnClass: {
+                type: String,
+                default: 'col-xl-4 col-lg-12',
+            },
+
             status: {
                 type: String,
                 default: 'success'
@@ -33,7 +38,7 @@
 
         computed: {
             statusClass() {
-                    return `card-header-${this.status}`;
+                return `card-header-${this.status}`;
             },
 
             hasHeader() {
