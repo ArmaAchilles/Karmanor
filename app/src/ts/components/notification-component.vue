@@ -2,7 +2,11 @@
     <li class="nav-item dropdown">
         <a class="nav-link" @click="onOpen()" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-bell fa-2x"></i>
-            <span v-show="notViewed" class="notification">{{ notViewed }}</span>
+
+            <transition name="fade">
+                <span v-show="notViewed" class="notification">{{ notViewed }}</span>
+            </transition>
+
             <p class="d-lg-none d-md-block">Notifications</p>
         </a>
 
@@ -79,6 +83,15 @@
     a.dropdown-item:hover {
         color: #fff;
         cursor: pointer;
+    }
+
+
+    .fade-enter-active {
+        transition: opacity .15s;
+    }
+
+    .fade-enter {
+        opacity: 0;
     }
 </style>
 
