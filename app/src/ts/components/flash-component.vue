@@ -1,6 +1,6 @@
 <template>
     <div class="alert-wrapper" v-show="notifications.length">
-        <transition-group name="custom-classes-animation" :enter-active-class="`animated ${enterTransition}`" leave-active-class="animated slideOutRight">
+        <transition-group name="custom-classes-animation" :enter-active-class="`animated fast ${enterTransition}`" leave-active-class="animated slideOutRight">
             <div role="alert"
                 v-for="notification in notifications"
                 :class="`alert alert-${notification.status}`"
@@ -58,6 +58,8 @@
                     icon: this.icon(status),
                     isImportant,
                 });
+
+                window.events.$emit('add-notification', message);
 
                 setTimeout(() => this.hide(), this.timeout);
             },
