@@ -40,6 +40,7 @@
                             fillHoles: true
                         }),
                         low: 0,
+                        high: 5,
                         chartPadding: {
                             top: 0,
                             right: 0,
@@ -92,6 +93,16 @@
 
         methods: {
             refreshChart() {
+                let largestValue = 0;
+
+                this.series.forEach(serie => {
+                    let max = _.max(serie);
+
+                    if (max > largestValue) largestValue = max;
+                });
+
+                this.options.high = largestValue + 5;
+
                 this.chart.update(this.data, this.options);
             },
         },
