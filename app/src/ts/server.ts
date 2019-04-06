@@ -48,6 +48,10 @@ export default class Server {
             });
         }).listen(port);
 
+        server.on('connection', () => {
+            events.$emit('server-connection');
+        });
+
         server.on('listening', () => {
             events.$emit('server-started');
             flash('Server started!');
