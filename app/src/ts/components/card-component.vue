@@ -24,17 +24,16 @@
 
 <script>
     export default {
-        props: ['status'],
+        props: {
+            status: {
+                type: String,
+                default: 'success'
+            },
+        },
 
         computed: {
             statusClass() {
-                if (this.status !== '' && this.status !== undefined) {
                     return `card-header-${this.status}`;
-                }
-
-                if (this.status === '' || this.status === undefined) {
-                    return 'card-header-success';
-                }
             },
 
             hasHeader() {
