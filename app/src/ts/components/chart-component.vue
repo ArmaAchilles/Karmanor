@@ -4,6 +4,7 @@
 
 <script>
     import Chartist from 'chartist';
+    import { events } from '../flash';
 
     export default {
         props: {
@@ -83,6 +84,10 @@
                     console.error(`${this.type} is not a valid Chartist chart type (line/bar/pie)!`);
                     break;
             }
+
+            events.$on('chart-update', () => {
+                this.refreshChart();
+            });
         },
 
         methods: {
