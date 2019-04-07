@@ -92,6 +92,15 @@
             },
         },
 
+        mounted() {
+            let charts = Settings.get('chart-home', {});
+
+            if (! _.isEqual(charts, {})) {
+                this.chartConnections = charts.connections;
+                this.chartRequests = charts.requests;
+            }
+        },
+
         methods: {
             startServer() {
                 this.server = new Server(Settings.get('server-settings.port'));
