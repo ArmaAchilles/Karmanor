@@ -54,6 +54,10 @@
                     Server Controls
                 </template>
 
+                <template slot="category">
+                    Toggle the server to listen for any incoming requests.
+                </template>
+
                 <button @click="startServer()" :disabled="serverStarted" class="btn btn-primary">Start Server</button>
                 <button @click="stopServer()" :disabled="!serverStarted" class="btn btn-outline-danger">Stop Server</button>
             </card-component>
