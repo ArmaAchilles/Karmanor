@@ -68,6 +68,7 @@
 <script>
     import Server from '../server';
     import Settings from '../settings';
+    import { ipcRenderer } from 'electron';
 
     export default {
         data() {
@@ -90,6 +91,17 @@
                 if (date === 0) return 6;
                 return new Date().getDay() - 1;
             },
+        },
+
+        created() {
+            ipcRenderer.on('chart-save', () => {
+                Settings.save('chart-home', {
+                    connections: this.chartConnections,
+                    requests: this.chartRequests,
+                }).then(() => {
+                    ipcRenderer.sendSync('chart-saved');
+                });
+            });
         },
 
         mounted() {

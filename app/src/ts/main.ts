@@ -18,6 +18,10 @@ function createWindow() {
 
     mainWindow.webContents.openDevTools();
 
+    mainWindow.on('close', () => {
+        mainWindow.webContents.send('chart-save');
+    });
+
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
