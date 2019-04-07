@@ -86,6 +86,9 @@
                     break;
             }
 
+            // Refresh the chart so that the option high value gets updated properly
+            this.refreshChart();
+
             events.$on('chart-update', () => {
                 this.refreshChart();
             });
