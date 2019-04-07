@@ -2,136 +2,109 @@
     <div class="container-fluid">
         <div class="row">
             <card-component>
-                <template slot="header"><chart-component></chart-component></template>
-
-                <template slot="title">Daily Sales</template>
-
-                <template slot="category">
-                    <span class="text-success"><i class="fas fa-arrow-up"></i> 55%</span> increase in today sales.
+                <template slot="header">
+                    <chart-component :series="[chartConnections]"></chart-component>
                 </template>
 
-                <template slot="footer">
-                    <i class="fas fa-clock"></i> updated 4 minutes ago
+                <template slot="title">
+                    Server Connections
+                </template>
+
+                <template slot="category">
+                    Connections that were established to our server.
                 </template>
             </card-component>
 
-            <card-component status="warning">
-                <template slot="header"><chart-component type="bar"></chart-component></template>
-                <template slot="title">Email Subscriptions</template>
-
-                <template slot="category">
-                    Last Campaign Performance
+            <card-component>
+                <template slot="header">
+                    <chart-component :series="[chartRequests]"></chart-component>
                 </template>
 
-                <template slot="footer">
-                    <i class="fas fa-clock"></i> campaign sent 2 days ago
+                <template slot="title">
+                    Proccessed Requests
+                </template>
+
+                <template slot="category">
+                    How many requests we got and we sent data back.
                 </template>
             </card-component>
 
-            <card-component status="danger">
-                <template slot="header"><chart-component></chart-component></template>
-                <template slot="title">Completed Tasks</template>
-
-                <template slot="category">
-                    Last Campaign Performance
+            <card-component>
+                <template slot="header">
+                    <chart-component type="bar"></chart-component>
                 </template>
 
-                <template slot="footer">
-                    <i class="fas fa-clock"></i> campaign sent 2 days ago
+                <template slot="title">
+                    Another card
+                </template>
+
+                <template slot="category">
+                    Just a template for some styling.
                 </template>
             </card-component>
         </div>
 
         <div class="row">
-            <small-card-component status="warning">
-                <i slot="icon" class="fas fa-copy"></i>
-
-                Used Space
+            <card-component columnClass="col-lg-12" :status="serverStarted ? 'success' : 'warning'">
+                <template slot="header">
+                    Server is {{ serverStarted ? 'online' : 'offline' }}.
+                </template>
 
                 <template slot="title">
-                    49/50 <small>GB</small>
+                    Server Controls
                 </template>
 
-                <template slot="footer">
-                    <i class="fas fa-exclamation-triangle text-warning"></i>
-                    <a href="#" class="text-warning">Get More Space...</a>
-                </template>
-            </small-card-component>
-
-            <small-card-component>
-                <i slot="icon" class="fas fa-dollar-sign"></i>
-
-                Revenue
-
-                <template slot="title">
-                    $34,245
-                </template>
-
-                <template slot="footer">
-                    <i class="fas fa-calendar-alt"></i>
-                    Last 24 Hours
-                </template>
-            </small-card-component>
-
-            <small-card-component status="danger">
-                <i slot="icon" class="fas fa-info-circle"></i>
-
-                Fixed issues
-
-                <template slot="title">
-                    75
-                </template>
-
-                <template slot="footer">
-                    <i class="fas fa-tag"></i>
-                    Tracked from GitHub
-                </template>
-            </small-card-component>
-
-            <small-card-component status="info">
-                <i slot="icon" class="fab fa-twitter"></i>
-
-                Followers
-
-                <template slot="title">
-                    +245
-                </template>
-
-                <template slot="footer">
-                    <i class="fas fa-stopwatch"></i>
-                    Just Updated
-                </template>
-            </small-card-component>
+                <button @click="startServer()" :disabled="serverStarted" class="btn btn-primary">Start Server</button>
+                <button @click="stopServer()" :disabled="!serverStarted" class="btn btn-outline-danger">Stop Server</button>
+            </card-component>
         </div>
     </div>
 </template>
 
 <script>
     import Server from '../server';
+    import Settings from '../settings';
 
     export default {
-        name: 'home',
-
         data() {
             return {
                 serverStarted: false,
                 server: {},
                 accessToken: '',
                 zip: {},
+
+                chartConnections: [0, 0, 0, 0, 0, 0, 0],
+                chartRequests: [0, 0, 0, 0, 0, 0, 0],
             }
+        },
+
+        computed: {
+            day() {
+                // 0 - Sunday, 1 - Monday etc.
+                const date = new Date().getDay();
+
+                if (date === 0) return 7;
+                return new Date().getDay() + 1;
+            },
         },
 
         methods: {
             startServer() {
-                this.server = new Server(8080);
+                this.server = new Server(Settings.get('server-settings.port'));
 
                 window.events.$on('server-started', () => {
                     this.serverStarted = true;
-                })
+                });
+
+                window.events.$on('server-connection', () => {
+                    this.incrementChartData(this.chartConnections);
+                });
 
                 window.events.$on('server-data-received', () => {
                     this.accessToken = this.server.accessToken;
                     this.zip = this.server.zip;
+
+                    this.incrementChartData(this.chartRequests);
                 });
             },
 
@@ -141,6 +114,12 @@
                 });
 
                 this.server.stop();
+            },
+
+            incrementChartData(series) {
+                series[this.day]++;
+
+                window.events.$emit('chart-update');
             },
         },
     }
