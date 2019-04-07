@@ -87,8 +87,8 @@
                 // 0 - Sunday, 1 - Monday etc.
                 const date = new Date().getDay();
 
-                if (date === 0) return 7;
-                return new Date().getDay() + 1;
+                if (date === 0) return 6;
+                return new Date().getDay() - 1;
             },
         },
 
