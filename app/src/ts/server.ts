@@ -42,16 +42,26 @@ export default class Server {
             });
 
             form.parse(request, (_error, fields: IFields, files: IFiles) => {
-                response.writeHead(200, { 'Content-Type': 'text/html' });
-
                 this.fields = fields,
                 this.files = files;
 
-                events.$emit('server-data-received');
+                const processor = new Processor(this.accessToken, this.zip);
 
-                response.end('200');
+                if (processor.isRequestValid()) {
+                    response.writeHead(200, { 'Content-Type': 'text/html' });
 
-                new Processor(this.accessToken, this.zip);
+                    events.$emit('server-data-received');
+
+                    response.end('200');
+
+                    processor.process();
+                } else {
+                    response.writeHead(403, { 'Content-Type': 'text/html' });
+
+                    response.end('403');
+
+                    processor.removeZip();
+                }
             });
         }).listen(port);
 

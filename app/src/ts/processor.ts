@@ -10,11 +10,9 @@ export default class Processor {
     constructor(accessToken: string, zip: IZip) {
         this.requestToken = accessToken;
         this.zip = zip;
-
-        this.process();
     }
 
-    private process() {
+    process() {
         if (this.isRequestValid()) {
             this.unpackZip();
         } else {
