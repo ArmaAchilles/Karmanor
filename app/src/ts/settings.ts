@@ -29,3 +29,42 @@ export default class Settings {
         });
     }
 }
+
+export class Saved {
+    static get accessToken(): string {
+        return Settings.get('server-settings.accessToken', '');
+    }
+
+    static get port(): string {
+        return Settings.get('server-settings.port', '');
+    }
+
+    static get downloadDirectory(): string {
+        return Settings.get('directories.downloadDirectory', '');
+    }
+
+    static get chartHome(): IChartHome {
+        return Settings.get('chart-home', {});
+    }
+
+    static set accessToken(accessToken) {
+        Settings.save('server-settings.accessToken', accessToken);
+    }
+
+    static set port(port) {
+        Settings.save('server-settings.port', port);
+    }
+
+    static set downloadDirectory(downloadDirectory) {
+        Settings.save('directories.downloadDirectory', downloadDirectory);
+    }
+
+    static set chartHome(chartHome: IChartHome) {
+        Settings.save('chart-home', chartHome);
+    }
+}
+
+export interface IChartHome {
+    connections: [0, 0, 0, 0, 0, 0, 0],
+    requests: [0, 0, 0, 0, 0, 0, 0],
+}

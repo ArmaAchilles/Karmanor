@@ -67,7 +67,7 @@
 
 <script>
     import Server from '../server';
-    import Settings from '../settings';
+    import Settings, { Saved } from '../settings';
     import { ipcRenderer } from 'electron';
 
     export default {
@@ -105,7 +105,7 @@
         },
 
         mounted() {
-            let charts = Settings.get('chart-home', {});
+            let charts = Saved.chartHome;
 
             if (! _.isEqual(charts, {})) {
                 this.chartConnections = charts.connections;
@@ -115,7 +115,7 @@
 
         methods: {
             startServer() {
-                this.server = new Server(Settings.get('server-settings.port'));
+                this.server = new Server(Saved.port);
 
                 window.events.$on('server-started', () => {
                     this.serverStarted = true;

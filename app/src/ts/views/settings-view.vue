@@ -42,7 +42,7 @@
 <script>
     const { dialog } = require('electron').remote;
 
-    import Settings from '../settings';
+    import Settings, { Saved } from '../settings';
 
     export default {
         data() {
@@ -55,9 +55,9 @@
         },
 
         mounted() {
-            this.port = Settings.get('server-settings.port', '');
-            this.accessToken = Settings.get('server-settings.accessToken', '');
-            this.downloadDirectory = Settings.get('directories.downloadDirectory', '');
+            this.port = Saved.port;
+            this.accessToken = Saved.accessToken;
+            this.downloadDirectory = Saved.downloadDirectory;
         },
 
         methods: {
