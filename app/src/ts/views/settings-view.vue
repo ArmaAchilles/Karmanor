@@ -28,11 +28,26 @@
 
                 <form>
                     <div class="form-group">
-                        <label for="downloadDirectory" @click="downloadClick()" class="bmd-label-floating clickable">Press to select file download directory</label>
-                        <span class="form-control clickable" id="downloadDirectory" @click="downloadClick()" v-text="downloadDirectory"></span>
+                        <label for="downloadDirectory" @click="openDirectory()" class="bmd-label-floating clickable">Press to select file download directory</label>
+                        <span class="form-control clickable" id="downloadDirectory" @click="openDirectory()" v-text="downloadDirectory"></span>
                     </div>
 
                     <button class="btn btn-primary" :disabled="formDisabled([downloadDirectory])" @click="saveSettings('directories', {downloadDirectory})">Save Settings</button>
+                </form>
+            </card-component>
+
+            <card-component status="primary">
+                <template slot="header">
+                    <h4 class="card-title">Game Settings</h4>
+                </template>
+
+                <form>
+                    <div class="form-group">
+                        <label for="gameExecutable" @click="openFile()" class="bmd-label-floating clickable">Press to select game executable path</label>
+                        <span class="form-control clickable" id="gameExecutable" v-text="executable" @click="openFile()"></span>
+                    </div>
+
+                    <button class="btn btn-primary" :disabled="formDisabled([executable])" @click="saveSettings('game', {executable})">Save Settings</button>
                 </form>
             </card-component>
         </div>
@@ -40,9 +55,8 @@
 </template>
 
 <script>
-    const { dialog } = require('electron').remote;
-
     import Settings, { Saved } from '../settings';
+    import Dialog from '../dialog';
 
     export default {
         data() {
@@ -51,6 +65,8 @@
                 accessToken: '',
 
                 downloadDirectory: '',
+
+                executable: '',
             }
         },
 
@@ -58,6 +74,7 @@
             this.port = Saved.port;
             this.accessToken = Saved.accessToken;
             this.downloadDirectory = Saved.downloadDirectory;
+            this.executable = Saved.game.executable;
         },
 
         methods: {
@@ -69,14 +86,24 @@
                 });
             },
 
-            downloadClick() {
-                let directories = dialog.showOpenDialog(null, {
-                    properties: ['openDirectory']
-                });
+            openDirectory() {
+                let directory = Dialog.openDirectory();
 
-                // If user canceled the dialog
-                if (directories !== undefined) {
-                    this.downloadDirectory = directories[0];
+                if (directory !== null) {
+                    this.downloadDirectory = directory;
+                }
+            },
+
+            openFile() {
+                let file = Dialog.openFile([
+                    {
+                        name: 'Arma 3 Executable',
+                        extensions: ['exe'],
+                    }
+                ]);
+
+                if (file !== null) {
+                    this.executable = file;
                 }
             },
 

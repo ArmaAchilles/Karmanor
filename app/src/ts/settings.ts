@@ -49,6 +49,9 @@ export class Saved {
         return Settings.get('chart-home', {});
     }
 
+    static get game(): IGame {
+        return Settings.get('game', {});
+    }
 
     // Setters
 
@@ -67,9 +70,17 @@ export class Saved {
     static set chartHome(chartHome) {
         Settings.save('chart-home', chartHome);
     }
+
+    static set game(game) {
+        Settings.save('game', game);
+    }
 }
 
 export interface IChartHome {
     connections: [0, 0, 0, 0, 0, 0, 0],
     requests: [0, 0, 0, 0, 0, 0, 0],
+}
+
+export interface IGame {
+    executable: string,
 }
