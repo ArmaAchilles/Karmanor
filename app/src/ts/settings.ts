@@ -31,6 +31,8 @@ export default class Settings {
 }
 
 export class Saved {
+    // Getters
+
     static get accessToken(): string {
         return Settings.get('server-settings.accessToken', '');
     }
@@ -47,6 +49,9 @@ export class Saved {
         return Settings.get('chart-home', {});
     }
 
+
+    // Setters
+
     static set accessToken(accessToken) {
         Settings.save('server-settings.accessToken', accessToken);
     }
@@ -59,7 +64,7 @@ export class Saved {
         Settings.save('directories.downloadDirectory', downloadDirectory);
     }
 
-    static set chartHome(chartHome: IChartHome) {
+    static set chartHome(chartHome) {
         Settings.save('chart-home', chartHome);
     }
 }
