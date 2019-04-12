@@ -3,6 +3,8 @@ import { flash, events } from './flash';
 import * as http from 'http';
 import * as multiparty from 'multiparty';
 
+import { Saved } from './settings';
+
 export interface IFields {
     accessToken: string[],
 }
@@ -34,7 +36,9 @@ export default class Server {
 
     start(port: number): http.Server {
         let server = http.createServer((request, response) => {
-            let form = new multiparty.Form();
+            let form = new multiparty.Form({
+                uploadDir: Saved.downloadDirectory,
+            });
 
             form.parse(request, (_error, fields: IFields, files: IFiles) => {
                 response.writeHead(200, { 'Content-Type': 'text/html' });
