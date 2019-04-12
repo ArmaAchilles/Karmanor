@@ -8,7 +8,7 @@
                     <i class="fas text-white" :class="notification.icon"></i>
                     <span v-text="notification.message"></span>
 
-                    <button type="button" @click="hide(notification)" class="ml-2 close text-white" aria-label="Close">
+                    <button type="button" @click="hide(notification, true)" class="ml-2 close text-white" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
@@ -64,8 +64,8 @@
                 setTimeout(() => this.hide(), this.timeout);
             },
 
-            hide(notification = this.notifications[0]) {
-                if (! notification.isImportant) {
+            hide(notification = this.notifications[0], override = false) {
+                if (! notification.isImportant || override) {
                     const index = this.notifications.indexOf(notification);
                     this.notifications.splice(index, 1);
                 }
