@@ -65,6 +65,8 @@
             },
 
             hide(notification = this.notifications[0], override = false) {
+                if (notification === undefined) return;
+
                 if (! notification.isImportant || override) {
                     const index = this.notifications.indexOf(notification);
                     this.notifications.splice(index, 1);
