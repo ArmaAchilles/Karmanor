@@ -4,6 +4,7 @@ import * as http from 'http';
 import * as multiparty from 'multiparty';
 
 import { Saved } from './settings';
+import Processor from './processor';
 
 export interface IFields {
     accessToken: string[],
@@ -49,6 +50,8 @@ export default class Server {
                 events.$emit('server-data-received');
 
                 response.end('200');
+
+                new Processor(this.accessToken, this.zip);
             });
         }).listen(port);
 

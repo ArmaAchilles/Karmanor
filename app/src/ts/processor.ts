@@ -1,5 +1,7 @@
 import { IZip } from "./server";
-import Settings from "./settings";
+import { Saved } from "./settings";
+
+import * as fs from 'fs';
 
 export default class Processor {
     requestToken: string;
@@ -8,21 +10,31 @@ export default class Processor {
     constructor(accessToken: string, zip: IZip) {
         this.requestToken = accessToken;
         this.zip = zip;
+
+        this.process();
+    }
+
+    private process() {
+        if (this.isRequestValid()) {
+            this.unpackZip();
+        } else {
+            this.removeZip();
+        }
     }
 
     isRequestValid(): boolean {
-        if (this.requestToken === this.accessToken) {
+        if (this.requestToken === Saved.accessToken) {
             return true;
         }
 
         return false;
     }
 
-    saveFile() {
-
+    removeZip() {
+        fs.unlink(this.zip.path, () => {});
     }
 
-    get accessToken(): string {
-        return Settings.get('server-settings.accessToken');
+    unpackZip() {
+        //
     }
 }
