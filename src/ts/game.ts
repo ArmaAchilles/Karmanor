@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { Tail } from 'tail';
 
 import { spawn, ChildProcess } from 'child_process';
+import { Saved } from './settings';
 
 export default class Game implements IGame {
     executable: string;
@@ -21,7 +22,7 @@ export default class Game implements IGame {
         this.rpt = data.rpt;
     }
 
-    static path(executable: string): string {
+    static path(executable = Saved.game.executable): string {
         return _.last(path.join(executable, '../').split(path.sep));
     }
 
