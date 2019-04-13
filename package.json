@@ -2,7 +2,7 @@
   "name": "karmanor",
   "version": "1.0.0",
   "description": "An Electron app which builds source code from ArmA 3 PBOs and runs the game with the built PBOs and runs testing functionality.",
-  "main": "app/dist/js/main.js",
+  "main": "dist/js/main.js",
   "scripts": {
     "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -36,6 +36,7 @@
     "bootstrap-material-design": "^4.1.1",
     "chartist": "^0.11.0",
     "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
     "electron": "^4.1.4",
     "electron-devtools-installer": "^2.2.4",
     "electron-settings": "^3.2.0",
@@ -59,7 +60,5 @@
     "vue-router": "^3.0.4",
     "vue-template-compiler": "^2.6.10"
   },
-  "dependencies": {
-    "css-loader": "^2.1.1"
-  }
+  "dependencies": {}
 }

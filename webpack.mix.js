@@ -12,13 +12,13 @@ mix.options({
     processCssUrls: false
 });
 
-mix.ts('app/src/ts/main.ts', 'app/dist/js')
-    .ts('app/src/ts/app.ts', 'app/dist/js')
-    .sass('app/src/sass/app.scss', 'app/dist/css', {
+mix.ts('src/ts/main.ts', 'dist/js')
+    .ts('src/ts/app.ts', 'dist/js')
+    .sass('src/sass/app.scss', 'dist/css', {
         includePaths: ['node_modules']
     })
-    .copy('app/src/html', 'app/dist/html', false)
-    .copy('app/src/images', 'app/dist/images', false)
-    .copy('app/src/fontawesome', 'app/dist/webfonts', false)
-    .copy('app/src/fonts', 'app/dist/fonts', false)
-    .setPublicPath('app/dist');
+    .copy('src/html', 'dist/html', false)
+    .copy('src/images', 'dist/images', false)
+    .copy('src/fontawesome', 'dist/webfonts', false)
+    .copy('src/fonts', 'dist/fonts', false)
+    .setPublicPath('dist');
