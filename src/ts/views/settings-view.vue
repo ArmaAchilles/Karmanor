@@ -3,6 +3,31 @@
         <div class="row">
             <card-component status="primary">
                 <template slot="header">
+                    <h4 class="card-title">Game Settings</h4>
+                </template>
+
+                <form>
+                    <div class="form-group">
+                        <label for="gameExecutable" @click="openFile()" class="bmd-label-floating clickable">Press to select game executable path</label>
+                        <span class="form-control clickable" id="gameExecutable" v-text="executable" @click="openFile()"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rpt" @click="openRpt()" class="bmd-label-floating clickable">Press to select where RPT files are stored</label>
+                        <span class="form-control clickable" id="rpt" v-text="rpt" @click="openRpt()"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parameters" class="bmd-label-floating">Parameters to launch the game with</label>
+                        <input type="text" class="form-control" id="parameters" v-model="parameters">
+                    </div>
+
+                    <button class="btn btn-primary" :disabled="formDisabled([executable, rpt, parameters])" @click="saveSettings('game', {executable, rpt, parameters})">Save Settings</button>
+                </form>
+            </card-component>
+
+            <card-component status="primary">
+                <template slot="header">
                     <h4 class="card-title">Server Settings</h4>
                 </template>
 
@@ -28,26 +53,11 @@
 
                 <form>
                     <div class="form-group">
-                        <label for="downloadDirectory" @click="openDirectory()" class="bmd-label-floating clickable">Press to select file download directory</label>
-                        <span class="form-control clickable" id="downloadDirectory" @click="openDirectory()" v-text="downloadDirectory"></span>
+                        <label for="downloadDirectory" @click="openDownloadDirectory()" class="bmd-label-floating clickable">Press to select file download directory</label>
+                        <span class="form-control clickable" id="downloadDirectory" @click="openDownloadDirectory()" v-text="downloadDirectory"></span>
                     </div>
 
                     <button class="btn btn-primary" :disabled="formDisabled([downloadDirectory])" @click="saveSettings('directories', {downloadDirectory})">Save Settings</button>
-                </form>
-            </card-component>
-
-            <card-component status="primary">
-                <template slot="header">
-                    <h4 class="card-title">Game Settings</h4>
-                </template>
-
-                <form>
-                    <div class="form-group">
-                        <label for="gameExecutable" @click="openFile()" class="bmd-label-floating clickable">Press to select game executable path</label>
-                        <span class="form-control clickable" id="gameExecutable" v-text="executable" @click="openFile()"></span>
-                    </div>
-
-                    <button class="btn btn-primary" :disabled="formDisabled([executable])" @click="saveSettings('game', {executable})">Save Settings</button>
                 </form>
             </card-component>
         </div>
@@ -67,6 +77,8 @@
                 downloadDirectory: '',
 
                 executable: '',
+                rpt: '',
+                parameters: '',
             }
         },
 
@@ -75,6 +87,8 @@
             this.accessToken = Saved.accessToken;
             this.downloadDirectory = Saved.downloadDirectory;
             this.executable = Saved.game.executable;
+            this.rpt = Saved.game.rpt;
+            this.parameters = Saved.game.parameters;
         },
 
         methods: {
@@ -86,11 +100,19 @@
                 });
             },
 
-            openDirectory() {
+            openDownloadDirectory() {
                 let directory = Dialog.openDirectory();
 
                 if (directory !== null) {
                     this.downloadDirectory = directory;
+                }
+            },
+
+            openRpt() {
+                let directory = Dialog.openDirectory();
+
+                if (directory !== null) {
+                    this.rpt = directory;
                 }
             },
 
