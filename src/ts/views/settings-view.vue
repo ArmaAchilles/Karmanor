@@ -133,7 +133,7 @@
                 let isDisabled = false;
 
                 controls.forEach(control => {
-                    isDisabled = (control === '' ? true : false);
+                    isDisabled = ((control === '' || control === undefined) ? true : false);
                 });
 
                 return isDisabled;
