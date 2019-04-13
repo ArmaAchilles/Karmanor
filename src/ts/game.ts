@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import * as _ from 'lodash';
 
-import Tail from 'node-tail';
+import { Tail } from 'tail';
 
 import { spawn, ChildProcess } from 'child_process';
 
