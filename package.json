@@ -47,6 +47,7 @@
     "lodash": "^4.17.11",
     "multiparty": "^4.2.1",
     "node-sass": "^4.11.0",
+    "node-tail": "0.0.4",
     "popper.js": "^1.15.0",
     "resolve-url-loader": "^2.3.1",
     "sass": "^1.18.0",
