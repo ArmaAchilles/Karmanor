@@ -1,6 +1,7 @@
 import * as settings from 'electron-settings';
 
 import * as _ from 'lodash';
+import { IGame } from './game';
 
 export default class Settings {
     static get(keyPath: string, defaultValue?: any): any {
@@ -79,8 +80,4 @@ export class Saved {
 export interface IChartHome {
     connections: [0, 0, 0, 0, 0, 0, 0],
     requests: [0, 0, 0, 0, 0, 0, 0],
-}
-
-export interface IGame {
-    executable: string,
 }
