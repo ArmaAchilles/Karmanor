@@ -4,21 +4,11 @@ import * as http from 'http';
 import * as multiparty from 'multiparty';
 
 import { Saved } from './settings';
+import Zip, { IZip } from './zip';
 import Processor from './processor';
 
 export interface IFields {
     accessToken: string[],
-}
-
-export interface IZip {
-    fieldName: string,
-    headers: {
-        'content-disposition': string,
-        'content-type': string,
-    },
-    originalFilename: string,
-    path: string,
-    size: number,
 }
 
 export interface IFiles {
@@ -60,7 +50,7 @@ export default class Server {
 
                     response.end('403');
 
-                    processor.removeZip();
+                    Zip.remove(this.zip.path);
                 }
             });
         }).listen(port);

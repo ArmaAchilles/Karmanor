@@ -1,9 +1,6 @@
-import { IZip } from "./server";
+import Zip, { IZip } from "./zip";
 import { Saved } from "./settings";
 
-import * as fs from 'fs';
-
-import * as extract from 'extract-zip';
 import Game from "./game";
 
 export default class Processor {
@@ -17,9 +14,9 @@ export default class Processor {
 
     process() {
         if (this.isRequestValid()) {
-            this.unpackZip();
+            Zip.unpack(this.zip.path, Game.path());
         } else {
-            this.removeZip();
+            Zip.remove(this.zip.path);
         }
     }
 
@@ -29,15 +26,5 @@ export default class Processor {
         }
 
         return false;
-    }
-
-    removeZip() {
-        fs.unlink(this.zip.path, () => {});
-    }
-
-    unpackZip() {
-        extract(this.zip.path, {
-            dir: Game.path(Saved.game.executable),
-        }, () => {});
     }
 }
