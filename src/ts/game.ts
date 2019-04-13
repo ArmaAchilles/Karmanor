@@ -21,6 +21,10 @@ export default class Game implements IGame {
         this.rpt = data.rpt;
     }
 
+    static path(executable: string): string {
+        return _.last(path.join(executable, '../').split(path.sep));
+    }
+
     get latestRpt(): string {
         return getLatestFile(this.rpt);
     }

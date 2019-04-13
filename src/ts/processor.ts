@@ -3,6 +3,9 @@ import { Saved } from "./settings";
 
 import * as fs from 'fs';
 
+import * as extract from 'extract-zip';
+import Game from "./game";
+
 export default class Processor {
     requestToken: string;
     zip: IZip;
@@ -33,6 +36,8 @@ export default class Processor {
     }
 
     unpackZip() {
-        //
+        extract(this.zip.path, {
+            dir: Game.path(Saved.game.executable),
+        }, () => {});
     }
 }
