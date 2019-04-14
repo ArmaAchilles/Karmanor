@@ -22,3 +22,5 @@ import './flash';
 
 // Add lodash
 (<any>window)._ = require('lodash');
+
+(<any>window).NODE_ENV = process.env.NODE_ENV;
