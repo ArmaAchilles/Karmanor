@@ -8,7 +8,7 @@ export default class Zip {
         fs.unlinkSync(path);
     }
 
-    static unpack(path: string, whereTo: string, callback?: (error: Error) => {}) {
+    static unpack(path: string, whereTo: string, callback = (_error: Error) => {}) {
         extract(path, {
             dir: this.unpackDirectory(path, whereTo),
         }, callback);
