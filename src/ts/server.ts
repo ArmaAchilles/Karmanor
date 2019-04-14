@@ -21,11 +21,11 @@ export default class Server {
     fields: IFields;
     files: IFiles;
 
-    constructor(port: number) {
+    constructor(port: number | string) {
         this.server = this.start(port);
     }
 
-    start(port: number): http.Server {
+    start(port: number | string): http.Server {
         let server = http.createServer((request, response) => {
             let form = new multiparty.Form({
                 uploadDir: Saved.downloadDirectory,
@@ -40,7 +40,7 @@ export default class Server {
                 if (processor.isRequestValid()) {
                     response.writeHead(200, { 'Content-Type': 'text/html' });
 
-                    events.$emit('server-data-received');
+                    events.$emit('server-data-received', this.accessToken, this.zip);
 
                     response.end('200');
 
@@ -49,6 +49,8 @@ export default class Server {
                     response.writeHead(403, { 'Content-Type': 'text/html' });
 
                     response.end('403');
+
+                    events.$emit('server-data-rejected', this.accessToken, this.zip);
 
                     Zip.remove(this.zip.path);
                 }
@@ -72,7 +74,7 @@ export default class Server {
         return server;
     }
 
-    restart(port: number): void {
+    restart(port: number | string): void {
         this.stop();
 
         events.$on('server-stopped', () => {
