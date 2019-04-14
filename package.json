@@ -10,7 +10,11 @@
     "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/",
+    "pack:force": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --overwrite",
+    "pack:all": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all",
+    "pack:all:force": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all --overwrite"
   },
   "repository": {
     "type": "git",
@@ -42,6 +46,7 @@
     "css-loader": "^2.1.1",
     "electron": "^4.1.4",
     "electron-devtools-installer": "^2.2.4",
+    "electron-packager": "^13.1.1",
     "electron-settings": "^3.2.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.2",

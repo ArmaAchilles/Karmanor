@@ -1,0 +1,19 @@
+{
+  "name": "karmanor",
+  "version": "1.0.0",
+  "description": "An Electron app which builds source code from ArmA 3 PBOs and runs the game with the built PBOs and runs testing functionality.",
+  "main": "js/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArmaAchilles/Karmanor.git"
+  },
+  "author": "ArmaAchilles",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ArmaAchilles/Karmanor/issues"
+  },
+  "homepage": "https://github.com/ArmaAchilles/Karmanor#readme"
+}
