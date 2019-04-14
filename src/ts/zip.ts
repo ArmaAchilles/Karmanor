@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import * as extract from 'extract-zip';
+import * as Path from 'path';
+import File from './file';
 
 export default class Zip {
     static remove(path: string) {
@@ -8,8 +10,12 @@ export default class Zip {
 
     static unpack(path: string, whereTo: string, callback?: (error: Error) => {}) {
         extract(path, {
-            dir: whereTo,
+            dir: this.unpackDirectory(path, whereTo),
         }, callback);
+    }
+
+    static unpackDirectory(path: string, whereTo: string): string {
+        return `${whereTo}${Path.sep}${File.filenameWithExtension(path)}`;
     }
 }
 

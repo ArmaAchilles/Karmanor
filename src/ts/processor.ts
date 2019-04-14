@@ -2,6 +2,7 @@ import Zip, { IZip } from "./zip";
 import { Saved } from "./settings";
 
 import Game from "./game";
+import File from "./file";
 
 export default class Processor {
     requestToken: string;
@@ -14,7 +15,8 @@ export default class Processor {
 
     process() {
         if (this.isRequestValid()) {
-            Zip.unpack(this.zip.path, Game.path());
+            Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
+
         } else {
             Zip.remove(this.zip.path);
         }
