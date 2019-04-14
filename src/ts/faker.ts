@@ -50,4 +50,24 @@ export default class Faker {
             }, (_.random(3, 12) * 1000));
         }
     }
+
+    file(whereTo: string, extension: string): string {
+        let directory = fs.mkdtempSync('karmanor');
+
+        let fileName = `${faker.lorem.slug()}.${extension}`;
+
+        let filePath = path.join(directory, fileName);
+
+        fs.writeFileSync(filePath, faker.lorem.paragraphs());
+
+        let newFilePath = path.join(whereTo, fileName);
+
+        fs.renameSync(filePath, newFilePath)
+
+        return newFilePath;
+    }
+
+    zip(path: string): string {
+        return this.file(path, 'zip');
+    }
 }
