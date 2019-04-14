@@ -17,6 +17,7 @@ export default class Processor {
         if (this.isRequestValid()) {
             Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
 
+            let game = new Game(Saved.game);
         } else {
             Zip.remove(this.zip.path);
         }
