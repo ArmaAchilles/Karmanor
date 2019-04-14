@@ -111,14 +111,11 @@
                 this.chartConnections = charts.connections;
                 this.chartRequests = charts.requests;
             }
-        },
 
-        methods: {
-            startServer() {
-                this.server = new Server(Saved.port);
-
-                window.events.$on('server-started', () => {
+            window.events.$on('server-started', server => {
                     this.serverStarted = true;
+
+                this.server = server;
                 });
 
                 window.events.$on('server-connection', () => {
@@ -131,13 +128,20 @@
 
                     this.incrementChartData(this.chartRequests);
                 });
-            },
 
-            stopServer() {
                 window.events.$on('server-stopped', () => {
                     this.serverStarted = false;
                 });
+        },
 
+        methods: {
+            startServer() {
+                new Server(Saved.port).start().then(server => {
+                    this.server = server;
+                });
+            },
+
+            stopServer() {
                 this.server.stop();
             },
 

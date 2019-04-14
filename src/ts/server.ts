@@ -17,68 +17,79 @@ export interface IFiles {
 
 export default class Server {
     server: http.Server;
+    port: number | string;
 
     fields: IFields;
     files: IFiles;
 
     constructor(port: number | string) {
-        this.server = this.start(port);
+        this.port = port;
     }
 
-    start(port: number | string): http.Server {
-        let server = http.createServer((request, response) => {
-            let form = new multiparty.Form({
-                uploadDir: Saved.downloadDirectory,
+    start(): Promise<Server> {
+        return new Promise((resolve, reject) => {
+            let server = http.createServer((request, response) => {
+                let form = new multiparty.Form({
+                    uploadDir: Saved.downloadDirectory,
+                });
+
+                form.parse(request, (_error, fields: IFields, files: IFiles) => {
+                    this.fields = fields,
+                    this.files = files;
+
+                    console.log(fields, files);
+
+                    const processor = new Processor(this.accessToken, this.zip);
+
+                    if (processor.isRequestValid()) {
+                        response.writeHead(200, { 'Content-Type': 'text/html' });
+
+                        events.$emit('server-data-received', this.accessToken, this.zip);
+
+                        response.end('200');
+
+                        processor.process();
+                    } else {
+                        response.writeHead(403, { 'Content-Type': 'text/html' });
+
+                        response.end('403');
+
+                        events.$emit('server-data-rejected', this.accessToken, this.zip);
+
+                        Zip.remove(this.zip.path);
+                    }
+                });
+            }).listen(this.port);
+
+            server.on('connection', () => {
+                events.$emit('server-connection');
             });
 
-            form.parse(request, (_error, fields: IFields, files: IFiles) => {
-                this.fields = fields,
-                this.files = files;
-
-                const processor = new Processor(this.accessToken, this.zip);
-
-                if (processor.isRequestValid()) {
-                    response.writeHead(200, { 'Content-Type': 'text/html' });
-
-                    events.$emit('server-data-received', this.accessToken, this.zip);
-
-                    response.end('200');
-
-                    processor.process();
-                } else {
-                    response.writeHead(403, { 'Content-Type': 'text/html' });
-
-                    response.end('403');
-
-                    events.$emit('server-data-rejected', this.accessToken, this.zip);
-
-                    Zip.remove(this.zip.path);
-                }
+            server.on('listening', () => {
+                events.$emit('server-started', this.server);
+                flash('Server started!');
             });
-        }).listen(port);
 
-        server.on('connection', () => {
-            events.$emit('server-connection');
+            server.on('close', () => {
+                events.$emit('server-stopped');
+                flash('Server stopped!');
+            });
+
+            server.on('error', error => {
+                reject(error);
+            })
+
+            this.server = server;
+
+            resolve(this);
         });
-
-        server.on('listening', () => {
-            events.$emit('server-started');
-            flash('Server started!');
-        });
-
-        server.on('close', () => {
-            events.$emit('server-stopped');
-            flash('Server stopped!');
-        });
-
-        return server;
     }
 
-    restart(port: number | string): void {
+    restart(): void {
         this.stop();
 
         events.$on('server-stopped', () => {
-            this.server = this.start(port);
+            this.start();
         });
     }
 
