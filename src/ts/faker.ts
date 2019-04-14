@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import * as faker from 'faker';
 import * as _ from 'lodash';
@@ -19,7 +20,7 @@ export default class Faker {
     createRpt(): string {
         let date = new Date();
 
-        let directory = fs.mkdtempSync('karmanor');
+        let directory = this.createTempDirectory();
 
         let yearMonthDay = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
         let hourMinutesDay = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
@@ -52,7 +53,7 @@ export default class Faker {
     }
 
     file(extension: string, whereTo?: string): string {
-        let directory = fs.mkdtempSync('karmanor');
+        let directory = this.createTempDirectory();
 
         let fileName = `${this.slug()}.${extension}`;
 
@@ -69,6 +70,16 @@ export default class Faker {
         }
 
         return filePath;
+    }
+
+    createTempDirectory(): string {
+        let tempDirectory = fs.mkdtempSync('karmanor');
+
+        let directory = path.join(os.tmpdir(), tempDirectory);
+
+        fs.renameSync(tempDirectory, directory);
+
+        return directory;
     }
 
     zip(path?: string): string {
