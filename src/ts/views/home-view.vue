@@ -62,6 +62,25 @@
                 <button @click="stopServer()" :disabled="!serverStarted" class="btn btn-outline-danger">Stop Server</button>
             </card-component>
         </div>
+
+        <div class="row" v-show="isDebug">
+            <card-component columnClass="col-lg-12" status="info">
+                <template slot="header">
+                    Karmanor Debugging
+                </template>
+
+                <template slot="title">
+                    Debug Controls
+                </template>
+
+                <template slot="category">
+                    Toggle testing and other kinds of debug functionality.
+                </template>
+
+                <button class="btn btn-info" @click="startAutoTest()">Start Normal Auto Test</button>
+                <button class="btn btn-info" @click="startAutoTest(true)">Start Rejected Auto Test</button>
+            </card-component>
+        </div>
     </div>
 </template>
 
@@ -69,6 +88,7 @@
     import Server from '../server';
     import Settings, { Saved } from '../settings';
     import { ipcRenderer } from 'electron';
+    import Test from '../test';
 
     export default {
         data() {
@@ -90,6 +110,10 @@
 
                 if (date === 0) return 6;
                 return new Date().getDay() - 1;
+            },
+
+            isDebug() {
+                return window.NODE_ENV !== 'production';
             },
         },
 
@@ -113,25 +137,25 @@
             }
 
             window.events.$on('server-started', server => {
-                    this.serverStarted = true;
+                this.serverStarted = true;
 
                 this.server = server;
-                });
+            });
 
-                window.events.$on('server-connection', () => {
-                    this.incrementChartData(this.chartConnections);
-                });
+            window.events.$on('server-connection', () => {
+                this.incrementChartData(this.chartConnections);
+            });
 
-                window.events.$on('server-data-received', () => {
-                    this.accessToken = this.server.accessToken;
-                    this.zip = this.server.zip;
+            window.events.$on('server-data-received', () => {
+                this.accessToken = this.server.accessToken;
+                this.zip = this.server.zip;
 
-                    this.incrementChartData(this.chartRequests);
-                });
+                this.incrementChartData(this.chartRequests);
+            });
 
-                window.events.$on('server-stopped', () => {
-                    this.serverStarted = false;
-                });
+            window.events.$on('server-stopped', () => {
+                this.serverStarted = false;
+            });
         },
 
         methods: {
@@ -149,6 +173,10 @@
                 series[this.day]++;
 
                 window.events.$emit('chart-update');
+            },
+
+            startAutoTest(reject = false) {
+                Test.requests(reject);
             },
         },
     }
