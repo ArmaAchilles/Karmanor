@@ -11,12 +11,23 @@
 @import '~animate.css/animate.min.css';
 
 .btn {
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
+
     &:disabled {
         cursor: default;
         opacity: 0.3;
 
         &:hover {
             box-shadow: 0px 0px 0px 0px !important;
+        }
+    }
+}
+
+.btn-outline-danger {
+    &:hover {
+        &:enabled {
+            background-color: #f44336 !important;
+            color: #fff !important;
         }
     }
 }
