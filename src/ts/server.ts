@@ -66,7 +66,7 @@ export default class Server {
             });
 
             server.on('listening', () => {
-                events.$emit('server-started', this.server);
+                events.$emit('server-started', this);
                 flash('Server started!');
             });
 
