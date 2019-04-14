@@ -16,8 +16,6 @@ function createWindow() {
 
     mainWindow.loadFile(path.join(__dirname, '../html/index.html'));
 
-    mainWindow.webContents.openDevTools();
-
     mainWindow.on('close', () => {
         mainWindow.webContents.send('chart-save');
     });
