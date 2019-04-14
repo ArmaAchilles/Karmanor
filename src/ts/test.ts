@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as assert from 'assert';
-import * as FormData from 'form-data';
 
 import axios from 'axios';
 import Faker from './faker';
@@ -11,6 +10,15 @@ import Zip, { IZip } from './zip';
 import File from './file';
 
 export default class Test {
+    private static generateBoundary(): string {
+        let boundary = '--------------------------';
+        for (let i = 0; i < 24; i++) {
+            boundary += Math.floor(Math.random() * 10).toString(16);
+        }
+
+        return boundary;
+    }
+
     static requests(fail?: false): boolean {
         let didSucceed = true;
 
@@ -28,20 +36,21 @@ export default class Test {
                 let zip = fs.readFileSync(zipPath);
 
                 let form = new FormData();
-                form.append('zip', zip, {
-                    filepath: zipPath,
-                    contentType: 'application/zip',
-                });
+
+                // @ts-ignore Buffer is compatible with Blob because it's the same data structure
+                form.append('zip', new Blob(zip));
 
                 form.append('accessToken', fail ? faker.slug() : Saved.accessToken);
 
                 axios.post(address, form, {
-                    headers: form.getHeaders(),
+                    headers: {
+                        'content-type': 'multipart/form-data; boundary=' + this.generateBoundary()
+                    },
                 }).then(response => {
                     if (fail) {
                         assert.fail(response.data);
                     } else {
-                        assert.strictEqual(response.data, '200');
+                        assert.strictEqual(response.data, 200);
                     }
                 }).catch(error => {
                     if (fail) {
@@ -52,16 +61,18 @@ export default class Test {
                 });
 
                 // If set to fail check that the zip got deleted
-                events.$once('server-data-rejected', (accessToken: string, zip: IZip) => {
-                    console.log(accessToken, zip);
+                events.$on('server-data-rejected', (accessToken: string, zip: IZip) => {
                     assert.notStrictEqual(accessToken, Saved.accessToken);
 
-                    assert.strictEqual(fs.existsSync(zip.path), false);
+                    // Need a delay because the file is removed in Processor after some time
+                    setTimeout(() => {
+                        assert.strictEqual(fs.existsSync(zip.path), false);
+                    }, 4 * 1000);
 
                     server.stop();
                 });
 
-                events.$once('server-data-recieved', (accessToken: string, zip: IZip) => {
+                events.$on('server-data-received', (accessToken: string, zip: IZip) => {
                     assert.strictEqual(accessToken, Saved.accessToken);
 
                     // If fail is false then check that the zip got extracted
