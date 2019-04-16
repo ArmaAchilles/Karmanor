@@ -1,3 +1,6 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 import Zip, { IZip } from "./zip";
 import { Saved } from "./settings";
 
@@ -15,7 +18,13 @@ export default class Processor {
 
     async process() {
         if (this.isRequestValid()) {
-            await Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
+            // TODO: Make dir without extension
+            // TODO: check if filenameWithExtension works
+            let newDirectory = path.join(File.directoryFromFilepath(Saved.game.executable), File.filenameWithExtension(this.zip.path));
+
+            fs.mkdirSync(newDirectory);
+
+            await Zip.unpack(this.zip.path, newDirectory);
         } else {
             Zip.remove(this.zip.path);
         }
