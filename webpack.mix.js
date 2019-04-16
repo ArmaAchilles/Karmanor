@@ -22,3 +22,9 @@ mix.ts('src/ts/main.ts', 'build/js')
     .copy('src/fonts/fontawesome', 'build/webfonts', false)
     .copy('src/fonts', 'build/fonts', false)
     .setPublicPath('build');
+
+if (! mix.inProduction()) {
+    mix.webpackConfig({
+        devtool: 'inline-source-map',
+    });
+}

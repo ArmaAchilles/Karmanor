@@ -1,18 +1,54 @@
+// Make sure that you have `npm run watch` running before launching debug otherwise breakpoints won't be inserted!
+
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Debug Main Process",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      //"preLaunchTask": "build",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-      "windows": {
-        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
-      },
-      "program": "${workspaceRoot}/build/js/main.js",
-      "protocol": "inspector",
-    }
-  ]
+    "configurations": [
+        {
+            "name": "Debug Main Electron Process",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+                "--enable-logging",
+                "--remote-debugging-port=9222",
+            ],
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/build/js/main.js",
+            "timeout": 20000,
+            "sourceMaps": true,
+        },
+        {
+            "name": "Debug Renderer Process",
+            "type": "chrome",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+                "${workspaceRoot}/build/js/main.js",
+                "--enable-logging",
+                "--remote-debugging-port=9222",
+            ],
+            "timeout": 20000,
+            "sourceMaps": true,
+            "webRoot": "${workspaceRoot}",
+        },
+        {
+            "name": "Attach to Main (Port 5858)",
+            "type": "node",
+            "request": "attach",
+            "port": 5858,
+            "sourceMaps": true
+        },
+        {
+            "name": "Attach to Renderer (Port 9222)",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "sourceMaps": false
+        }
+    ]
 }
