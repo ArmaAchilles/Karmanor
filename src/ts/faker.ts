@@ -3,6 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as faker from 'faker';
 import * as _ from 'lodash';
+import * as JSZip from 'jszip';
 
 import Game from "./game";
 
@@ -82,8 +83,22 @@ export default class Faker {
         return directory;
     }
 
-    zip(path?: string): string {
-        return this.file('zip', path);
+    zip(whereTo?: string): Promise<string> {
+        return new Promise(resolve => {
+            let zip = new JSZip();
+
+            let directory = whereTo ? whereTo : this.createTempDirectory();
+
+            let zipPath = path.join(directory, 'output.zip');
+
+            zip.file(`${this.slug()}.txt`, faker.lorem.paragraphs());
+
+            zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+                .pipe(fs.createWriteStream(zipPath))
+                .on('finish', () => {
+                    resolve(zipPath);
+                });
+        });
     }
 
     slug(): string {

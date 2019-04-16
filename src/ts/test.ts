@@ -19,14 +19,15 @@ export default class Test {
         return boundary;
     }
 
-    static requests(fail?: false): boolean {
+    static requests(fail?: false): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
         let didSucceed = true;
 
         try {
             let faker = new Faker();
 
             // Generate some zip file
-            let zipPath = faker.zip();
+                let zipPath = await faker.zip();
 
             // Start server if not started
             new Server(Saved.port).start().then(server => {
@@ -99,7 +100,7 @@ export default class Test {
 
             if (! (error instanceof assert.AssertionError)) {
                 flash('Something went wrong during testing!', 'danger', true);
-                throw error;
+                    reject(error);
             }
 
             flash('The test failed!', 'danger', true);
@@ -108,6 +109,7 @@ export default class Test {
         if (didSucceed) flash('The test succeeded!');
 
         // Return true if all went well
-        return didSucceed;
+            resolve(didSucceed);
+        });
     }
 }
