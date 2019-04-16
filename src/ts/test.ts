@@ -21,8 +21,6 @@ export default class Test {
 
     static requests(fail?: false): Promise<boolean> {
         return new Promise(async (resolve, reject) => {
-            let didSucceed = true;
-
             try {
                 let faker = new Faker();
 
@@ -38,7 +36,8 @@ export default class Test {
 
                     let form = new FormData();
 
-                    form.append('zip', new Blob(zip));
+                    // @ts-ignore
+                    form.append('zip', new Blob(zip, { type: 'application/zip' }));
 
                     form.append('accessToken', fail ? faker.slug() : Saved.accessToken);
 
@@ -65,11 +64,14 @@ export default class Test {
                         assert.notStrictEqual(accessToken, Saved.accessToken);
 
                         // Need a delay because the file is removed in Processor after some time
+                        // TODO: Replace with a await
                         setTimeout(() => {
                             assert.strictEqual(fs.existsSync(zip.path), false);
                         }, 4 * 1000);
 
                         server.stop();
+
+                        resolve(true);
                     });
 
                     events.$on('server-data-received', (accessToken: string, zip: IZip) => {
@@ -84,6 +86,8 @@ export default class Test {
                         );
 
                         server.stop();
+
+                        resolve(true);
                     });
 
                     // Check if the game got launched with the right params
@@ -95,20 +99,14 @@ export default class Test {
                     // Check that build failed
                 });
             } catch (error) {
-                didSucceed = false;
-
                 if (! (error instanceof assert.AssertionError)) {
                     flash('Something went wrong during testing!', 'danger', true);
                     reject(error);
                 }
 
                 flash('The test failed!', 'danger', true);
+                resolve(false);
             }
-
-            if (didSucceed) flash('The test succeeded!');
-
-            // Return true if all went well
-            resolve(didSucceed);
         });
     }
 }

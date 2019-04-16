@@ -176,7 +176,12 @@
             },
 
             startAutoTest(reject = false) {
-                Test.requests(reject);
+                Test.requests(reject).then(didSucceed => {
+                    didSucceed ? flash('The test succeeded!') : flash('The test failed!', 'danger', true);
+                }).catch(error => {
+                    flash('The test errored! See console!', 'danger', true)
+                    console.error(error);
+                });
             },
         },
     }
