@@ -19,6 +19,6 @@ mix.ts('src/ts/main.ts', 'build/js')
     })
     .copy('src/html', 'build/html', false)
     .copy('src/images', 'build/images', false)
-    .copy('src/fontawesome', 'build/webfonts', false)
+    .copy('src/fonts/fontawesome', 'build/webfonts', false)
     .copy('src/fonts', 'build/fonts', false)
     .setPublicPath('build');
