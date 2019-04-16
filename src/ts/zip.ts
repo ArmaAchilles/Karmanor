@@ -8,10 +8,15 @@ export default class Zip {
         fs.unlinkSync(path);
     }
 
-    static unpack(path: string, whereTo: string, callback = (_error: Error) => {}) {
-        extract(path, {
-            dir: this.unpackDirectory(path, whereTo),
-        }, callback);
+    static unpack(path: string, whereTo: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            extract(path, {
+                dir: this.unpackDirectory(path, whereTo),
+            }, (error: Error) => {
+                if (error) reject(error);
+                resolve();
+            });
+        });
     }
 
     static unpackDirectory(path: string, whereTo: string): string {

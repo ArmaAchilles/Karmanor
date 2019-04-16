@@ -13,11 +13,9 @@ export default class Processor {
         this.zip = zip;
     }
 
-    process() {
+    async process() {
         if (this.isRequestValid()) {
-            Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
-
-            let game = new Game(Saved.game);
+            await Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
         } else {
             Zip.remove(this.zip.path);
         }
