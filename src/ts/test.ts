@@ -92,11 +92,9 @@ export default class Test {
                 });
             } catch (error) {
                 if (! (error instanceof assert.AssertionError)) {
-                    flash('Something went wrong during testing!', 'danger', true);
                     reject(error);
                 }
 
-                flash('The test failed!', 'danger', true);
                 resolve(false);
             }
         });
