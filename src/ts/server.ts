@@ -30,7 +30,7 @@ export default class Server {
         return new Promise((resolve, reject) => {
             let server = http.createServer((request, response) => {
                 let form = new multiparty.Form({
-                    uploadDir: Saved.downloadDirectory, // TODO: File isn't processed as zip if running from test suite (no extension)
+                    uploadDir: Saved.downloadDirectory,
                 });
 
                 form.parse(request, (_error, fields: IFields, files: IFiles) => {
