@@ -5,7 +5,7 @@ import axios from 'axios';
 import Faker from './faker';
 import Server from './server';
 import { Saved } from './settings';
-import { events, flash } from './flash';
+import { events } from './flash';
 import Zip, { IZip } from './zip';
 import File from './file';
 
@@ -32,12 +32,11 @@ export default class Test {
                     // Make POST request to itself with zip (if fail then provide a random token)
                     let address = `http://127.0.0.1:${Saved.port}`;
 
-                    let zip = fs.readFileSync(zipPath);
+                    let zip = File.base64ToBlob(fs.readFileSync(zipPath).toString('base64'), 'application/zip');
 
                     let form = new FormData();
 
-                    // @ts-ignore
-                    form.append('zip', new Blob(zip, { type: 'application/zip' }));
+                    form.append('zip', zip);
 
                     form.append('accessToken', fail ? faker.slug() : Saved.accessToken);
 
