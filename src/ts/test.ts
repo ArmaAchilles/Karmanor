@@ -66,19 +66,24 @@ export default class Test {
                     });
 
                     events.$on('server-data-received', (accessToken: string, zip: IZip) => {
+                        // Race condition rename
+                        fs.renameSync(zip.path, `${zip.path}.zip`);
+                        zip.path = `${zip.path}.zip`;
+
                         assert.strictEqual(accessToken, Saved.accessToken);
 
-                        // If fail is false then check that the zip got extracted
-                        assert.strictEqual(
-                            fs.existsSync(
-                                Zip.unpackDirectory(zip.path, File.filenameWithExtension(Saved.game.executable))
-                            ),
-                            true
-                        );
+                        events.$on('zip-extracted', () => {
+                            assert.strictEqual(
+                                fs.existsSync(
+                                    Zip.unpackDirectory(zip.path, File.directoryFromFilepath(Saved.game.executable))
+                                ),
+                                true
+                            );
 
-                        server.stop();
+                            server.stop();
 
-                        resolve(true);
+                            resolve(true);
+                        });
                     });
 
                     // Check if the game got launched with the right params
