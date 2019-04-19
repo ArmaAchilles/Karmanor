@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import Zip, { IZip } from "./zip";
 import File from "./file";
 import { Saved } from "./settings";
@@ -31,10 +33,39 @@ export default class Build {
 
         game.start();
 
-        // TODO: Check if last build had also failed/errored
-        let status = await game.readRpt();
+        let reportedStatus = await game.readRpt();
 
         game.close();
+
+        this.setStatus(reportedStatus);
+
+        this.save();
+    }
+
+    get lastBuildStatus(): EBuildStatus {
+        return _.last(Saved.builds).status;
+    }
+
+    get didLastBuildFail(): boolean {
+        return (
+            this.lastBuildStatus === EBuildStatus.failed ||
+            this.lastBuildStatus === EBuildStatus.stillFailing
+        );
+    }
+
+    setStatus(reportedStatus: EBuildStatus) {
+        let status = reportedStatus;
+
+        // If build is still failing
+        if (this.didLastBuildFail && (
+            reportedStatus === EBuildStatus.failed ||
+            reportedStatus === EBuildStatus.stillFailing)
+            ) {
+                status = EBuildStatus.stillFailing;
+        }
+
+        this.status = status;
+        this.timeFinished = new Date();
     }
 
     save() {
@@ -42,14 +73,15 @@ export default class Build {
         builds.push(this);
         Saved.builds = builds;
     }
+
 }
 
 export enum EBuildStatus {
-    pending,
-    passed,
-    fixed,
     broken,
-    failed,
-    stillFailing,
     canceled,
+    failed,
+    fixed,
+    passed,
+    pending,
+    stillFailing,
 }
