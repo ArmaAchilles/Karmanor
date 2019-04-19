@@ -6,6 +6,7 @@ import { Saved } from "./settings";
 
 import Game from "./game";
 import File from "./file";
+import { events } from './flash';
 
 export default class Processor {
     requestToken: string;
@@ -18,13 +19,12 @@ export default class Processor {
 
     async process() {
         if (this.isRequestValid()) {
-            // TODO: Make dir without extension
-            // TODO: check if filenameWithExtension works
-            let newDirectory = path.join(File.directoryFromFilepath(Saved.game.executable), File.filenameWithExtension(this.zip.path));
+            let unpackedDirectory =
+                await Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
 
-            fs.mkdirSync(newDirectory);
+            events.$emit('zip-extracted');
 
-            await Zip.unpack(this.zip.path, newDirectory);
+            Zip.remove(this.zip.path);
         } else {
             Zip.remove(this.zip.path);
         }
