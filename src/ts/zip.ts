@@ -1,26 +1,28 @@
 import * as fs from 'fs';
 import * as extract from 'extract-zip';
-import * as Path from 'path';
+import * as path from 'path';
 import File from './file';
 
 export default class Zip {
-    static remove(path: string) {
-        fs.unlinkSync(path);
+    static remove(filepath: string) {
+        fs.unlinkSync(filepath);
     }
 
-    static unpack(path: string, whereTo: string): Promise<void> {
+    static unpack(zipFilepath: string, extractDir: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            extract(path, {
-                dir: this.unpackDirectory(path, whereTo),
+            let unpackDirectory = this.unpackDirectory(zipFilepath, extractDir);
+
+            extract(zipFilepath, {
+                dir: unpackDirectory,
             }, (error: Error) => {
                 if (error) reject(error);
-                resolve();
+                resolve(unpackDirectory);
             });
         });
     }
 
-    static unpackDirectory(path: string, whereTo: string): string {
-        return `${whereTo}${Path.sep}${File.filenameWithExtension(path)}`;
+    static unpackDirectory(zipFilepath: string, extractDir: string): string {
+        return path.join(extractDir, File.filenameWithoutExtension(zipFilepath));
     }
 }
 
