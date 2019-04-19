@@ -1,8 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {
@@ -26,9 +24,11 @@ function createWindow() {
     });
 
     if (process.env.NODE_ENV !== 'production' && !process.env.VSCODE_DEBUG) {
+        const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
+
         installExtension(VUEJS_DEVTOOLS).then(() => {
             mainWindow.webContents.openDevTools();
-        }).catch(err => console.error(err));
+        }).catch((err: Error) => console.error(err));
     }
 }
 
