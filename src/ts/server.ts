@@ -37,24 +37,20 @@ export default class Server {
                     this.fields = fields,
                     this.files = files;
 
-                    // TODO: Add some type checking for inputs (if zip wasn't provided, etc.)
+                    if (this.accessToken === undefined) {
+                        if (this.zip !== undefined) Zip.remove(this.zip.path);
 
-                    const processor = new Processor(this.accessToken, this.zip);
+                        this.writeResponse(response, EHttpStatus.badRequest);
+                    }
 
-                    if (processor.isRequestValid()) {
-                        response.writeHead(200, { 'Content-Type': 'text/html' });
+                    if (this.zip === undefined) {
+                        this.writeResponse(response, EHttpStatus.badRequest);
+                    };
 
-                        events.$emit('server-data-received', this.accessToken, this.zip);
-
-                        response.end('200');
-
-                        processor.process();
+                    if (this.isRequestValid(this.accessToken)) {
+                        this.writeResponse(response, EHttpStatus.ok);
                     } else {
-                        response.writeHead(403, { 'Content-Type': 'text/html' });
-
-                        response.end('403');
-
-                        events.$emit('server-data-rejected', this.accessToken, this.zip);
+                        this.writeResponse(response, EHttpStatus.forbidden);
 
                         Zip.remove(this.zip.path);
                     }
@@ -97,11 +93,47 @@ export default class Server {
         this.server.close();
     }
 
-    get accessToken(): string {
-        return this.fields.accessToken[0];
+    isRequestValid(accessToken: string): boolean {
+        return accessToken === Saved.accessToken;
     }
 
-    get zip(): IZip {
-        return this.files.zip[0];
+    private writeResponse(response: http.ServerResponse, code: EHttpStatus = EHttpStatus.ok): void {
+        if (code == EHttpStatus.ok) {
+            response.writeHead(code, { 'Content-Type': 'text/html' });
+
+            events.$emit('server-data-received', this.accessToken, this.zip);
+
+            response.end(code.toString());
+        } else {
+            response.writeHead(code, { 'Content-Type': 'text/html' });
+
+            response.end(code.toString());
+
+            events.$emit('server-data-rejected');
+        }
     }
+
+    get accessToken(): string | undefined {
+        try {
+            return this.fields.accessToken[0];
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    get zip(): IZip | undefined {
+        try {
+            return this.files.zip[0];
+        } catch (error) {
+            return undefined;
+        }
+    }
+}
+
+enum EHttpStatus {
+    ok = 200,
+    badRequest = 400,
+    forbidden = 403,
+    notFound = 404,
+    serverError = 500,
 }
