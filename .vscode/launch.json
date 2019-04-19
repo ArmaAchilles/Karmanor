@@ -18,6 +18,8 @@
             "program": "${workspaceRoot}/build/js/main.js",
             "timeout": 20000,
             "sourceMaps": true,
+            "preLaunchTask": "build:debug",
+            "postDebugTask": "build:noDebug"
         },
         {
             "name": "Debug Renderer Process",
@@ -35,6 +37,8 @@
             "timeout": 20000,
             "sourceMaps": true,
             "webRoot": "${workspaceRoot}",
+            "preLaunchTask": "build:debug",
+            "postDebugTask": "build:noDebug"
         },
         {
             "name": "Attach to Main (Port 5858)",

@@ -3,8 +3,13 @@
     "tasks": [
         {
             "type": "npm",
+            "script": "development:debug",
+            "label": "build:debug"
+        },
+        {
+            "type": "npm",
             "script": "dev",
-            "label": "build"
-        }
+            "label": "build:noDebug"
+        },
     ]
 }

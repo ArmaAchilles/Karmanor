@@ -16,16 +16,13 @@ function createWindow() {
 
     mainWindow.loadFile(path.join(__dirname, '../html/index.html'));
 
-    // TODO: This env is available only when running from VS Code's debugger
-    //  but it is compiled by Webpack and Mix before it is actually set
-    //  so it results in undefined during run-time (see compiled main.js)
-    //  however, in debug tools it works fine.
-    if (process.env.VSCODE_CLI !== undefined) {
+    if (process.env.VSCODE_DEBUG) {
         app.setName('Karmanor');
         app.getPath('userData');
     }
 
     mainWindow.on('close', () => {
+        // TODO: Save chart data to settings
         mainWindow.webContents.send('chart-save');
     });
 
@@ -33,7 +30,7 @@ function createWindow() {
         mainWindow = null;
     });
 
-    if (process.env.NODE_ENV !== 'production' && process.env.VSCODE_CLI === undefined) {
+    if (process.env.NODE_ENV !== 'production' && !process.env.VSCODE_DEBUG) {
         installExtension(VUEJS_DEVTOOLS).then(() => {
             mainWindow.webContents.openDevTools();
         }).catch(err => console.error(err));

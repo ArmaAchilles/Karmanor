@@ -1,11 +1,17 @@
 const mix = require('laravel-mix');
+const webpack = require('webpack');
 
 mix.webpackConfig({
     target: 'electron-renderer',
     node: {
         fs: 'empty',
         __dirname: false
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.VSCODE_DEBUG': JSON.stringify(process.env.VSCODE_DEBUG) || 'false'
+        })
+    ]
 });
 
 mix.options({
