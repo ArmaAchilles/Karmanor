@@ -2,6 +2,7 @@ import * as settings from 'electron-settings';
 
 import * as _ from 'lodash';
 import { IGame } from './game';
+import Build from './build';
 
 export default class Settings {
     static get(keyPath: string, defaultValue?: any): any {
@@ -54,6 +55,10 @@ export class Saved {
         return Settings.get('game', {});
     }
 
+    static get builds(): Build[] {
+        return Settings.get('builds', []);
+    }
+
     // Setters
 
     static set accessToken(accessToken) {
@@ -74,6 +79,10 @@ export class Saved {
 
     static set game(game) {
         Settings.save('game', game);
+    }
+
+    static set builds(builds) {
+        Settings.save('builds', builds);
     }
 }
 

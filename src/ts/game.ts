@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Tail } from 'tail';
 
 import { spawn, ChildProcess } from 'child_process';
+import { EBuildStatus } from './build';
 import File from './file';
 
 export default class Game implements IGame {
@@ -40,26 +41,40 @@ export default class Game implements IGame {
         this.process.kill();
     }
 
-    readRpt() {
-        let tail = new Tail(this.latestRpt);
+    readRpt(): Promise<EBuildStatus> {
+        return new Promise(resolve => {
+            let tail = new Tail(this.latestRpt);
 
-        tail.on('line', text => {
-            if (text.includes('Karmanor: Build failed.')) {
-                tail.unwatch();
-            }
+            tail.on('line', text => {
+                if (text.includes('Karmanor: Build failed.')) {
+                    tail.unwatch();
 
-            // Arma 3 closes
-            if (text.includes('Shutdown normally')) {
-                tail.unwatch();
-            }
+                    resolve(EBuildStatus.failed)
+                }
+
+                if (text.includes('Karmanor: Build passed.')) {
+                    tail.unwatch();
+
+                    resolve(EBuildStatus.passed);
+                }
+
+                // Arma 3 closes
+                if (text.includes('Shutdown normally')) {
+                    tail.unwatch();
+
+                    resolve(EBuildStatus.broken);
+                }
+            });
+
+            // 15 minutes timeout if something went wrong
+            setTimeout(() => {
+                if (tail !== undefined) {
+                    tail.unwatch();
+
+                    resolve(EBuildStatus.broken);
+                }
+            }, 15 * 1000 * 60)
         });
-
-        // 15 minutes timeout if something went wrong
-        setTimeout(() => {
-            if (tail !== undefined) {
-                tail.unwatch();
-            }
-        }, 15 * 1000 * 60)
     }
 }
 
