@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import * as _ from 'lodash';
 
 export default class File {
@@ -23,5 +24,25 @@ export default class File {
         }
 
         return new Blob([intArray], { type: mime });
+    }
+
+    static getLatestFile(directory: string): string {
+        let files = fs.readdirSync(directory);
+
+        let modificationTimes: { filePath: string, difference: number }[];
+
+        files.forEach(file => {
+            let filePath = path.join(directory, file);
+
+            let dateCreated = fs.statSync(filePath).ctime;
+
+            let difference = new Date().getTime() - dateCreated.getTime()
+
+            modificationTimes.push({
+                filePath, difference,
+            });
+        });
+
+        return _.sortBy(modificationTimes, ['difference'])[0].filePath;
     }
 }

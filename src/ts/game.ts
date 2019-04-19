@@ -1,11 +1,9 @@
-import * as path from 'path';
-import * as fs from 'fs';
-
 import * as _ from 'lodash';
 
 import { Tail } from 'tail';
 
 import { spawn, ChildProcess } from 'child_process';
+import File from './file';
 
 export default class Game implements IGame {
     executable: string;
@@ -22,7 +20,7 @@ export default class Game implements IGame {
     }
 
     get latestRpt(): string {
-        return getLatestFile(this.rpt);
+        return File.getLatestFile(this.rpt);
     }
 
     start() {
@@ -69,24 +67,4 @@ export interface IGame {
     executable: string,
     parameters: string,
     rpt: string,
-}
-
-export function getLatestFile(directory: string): string {
-    let files = fs.readdirSync(directory);
-
-    let modificationTimes: {filePath: string, difference: number}[];
-
-    files.forEach(file => {
-        let filePath = path.join(directory, file);
-
-        let dateCreated = fs.statSync(filePath).ctime;
-
-        let difference = new Date().getTime() - dateCreated.getTime()
-
-        modificationTimes.push({
-            filePath, difference,
-        });
-    });
-
-    return _.sortBy(modificationTimes, ['difference'])[0].filePath;
 }
