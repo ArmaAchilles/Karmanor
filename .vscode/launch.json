@@ -11,6 +11,7 @@
                 "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
             "runtimeArgs": [
+                ".",
                 "--enable-logging",
                 "--remote-debugging-port=9222",
             ],
@@ -30,13 +31,14 @@
                 "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
             "runtimeArgs": [
-                "${workspaceRoot}/build/js/main.js",
+                ".",
                 "--enable-logging",
                 "--remote-debugging-port=9222",
             ],
             "timeout": 20000,
             "sourceMaps": true,
             "webRoot": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}",
             "preLaunchTask": "build:debug",
             "postDebugTask": "build:noDebug"
         },

@@ -16,11 +16,6 @@ function createWindow() {
 
     mainWindow.loadFile(path.join(__dirname, '../html/index.html'));
 
-    if (process.env.VSCODE_DEBUG) {
-        app.setName('Karmanor');
-        app.getPath('userData');
-    }
-
     mainWindow.on('close', () => {
         // TODO: Save chart data to settings
         mainWindow.webContents.send('chart-save');
