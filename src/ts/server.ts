@@ -5,7 +5,6 @@ import * as multiparty from 'multiparty';
 
 import { Saved } from './settings';
 import Zip, { IZip } from './zip';
-import Processor from './processor';
 
 export interface IFields {
     accessToken: string[],
