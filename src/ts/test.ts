@@ -55,7 +55,6 @@ export default class Test {
                         assert.notStrictEqual(accessToken, Saved.accessToken);
 
                         // Need a delay because the file is removed in Processor after some time
-                        // TODO: Replace with a await
                         setTimeout(() => {
                             assert.strictEqual(fs.existsSync(zip.path), false);
                         }, 4 * 1000);
