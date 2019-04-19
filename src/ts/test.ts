@@ -46,17 +46,9 @@ export default class Test {
                             'content-type': 'multipart/form-data; boundary=' + this.generateBoundary()
                         },
                     }).then(response => {
-                        if (fail) {
-                            assert.fail(response.data);
-                        } else {
-                            assert.strictEqual(response.data, 200);
-                        }
+                        fail ? reject(fail) : assert.strictEqual(response.data, 200);
                     }).catch(error => {
-                        if (fail) {
-                            console.info(error);
-                        } else {
-                            assert.fail(error);
-                        }
+                        fail ? resolve(true) : reject(error);
                     });
 
                     // If set to fail check that the zip got deleted
