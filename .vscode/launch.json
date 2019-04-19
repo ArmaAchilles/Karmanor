@@ -1,5 +1,3 @@
-// Make sure that you have `npm run watch` running before launching debug otherwise breakpoints won't be inserted!
-
 {
     "configurations": [
         {
@@ -13,8 +11,9 @@
             "runtimeArgs": [
                 ".",
                 "--enable-logging",
-                "--remote-debugging-port=9222",
+                "--remote-debugging-port=5858",
             ],
+            "port": 5858,
             "cwd": "${workspaceRoot}",
             "program": "${workspaceRoot}/build/js/main.js",
             "timeout": 20000,
@@ -35,9 +34,10 @@
                 "--enable-logging",
                 "--remote-debugging-port=9222",
             ],
+            "port": 9222,
             "timeout": 20000,
             "sourceMaps": true,
-            "webRoot": "${workspaceRoot}",
+            "webRoot": "${workspaceFolder}",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "build:debug",
             "postDebugTask": "build:noDebug"
@@ -54,7 +54,7 @@
             "type": "chrome",
             "request": "attach",
             "port": 9222,
-            "sourceMaps": false
+            "sourceMaps": true
         }
     ]
 }
