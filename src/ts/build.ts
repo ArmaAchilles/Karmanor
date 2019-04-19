@@ -42,22 +42,26 @@ export default class Build {
         this.save();
     }
 
-    get lastBuildStatus(): EBuildStatus {
+    private lastBuildStatus(): EBuildStatus {
         return _.last(Saved.builds).status;
     }
 
-    get didLastBuildFail(): boolean {
+    private didLastBuildFail(): boolean {
         return (
-            this.lastBuildStatus === EBuildStatus.failed ||
-            this.lastBuildStatus === EBuildStatus.stillFailing
+            this.lastBuildStatus() === EBuildStatus.failed ||
+            this.lastBuildStatus() === EBuildStatus.stillFailing
         );
     }
 
-    setStatus(reportedStatus: EBuildStatus) {
+    public getStatus(): EBuildStatus {
+        return this.status;
+    }
+
+    private setStatus(reportedStatus: EBuildStatus) {
         let status = reportedStatus;
 
         // If build is still failing
-        if (this.didLastBuildFail && (
+        if (this.didLastBuildFail() && (
             reportedStatus === EBuildStatus.failed ||
             reportedStatus === EBuildStatus.stillFailing)
             ) {
@@ -68,12 +72,11 @@ export default class Build {
         this.timeFinished = new Date();
     }
 
-    save() {
+    private save() {
         let builds = Saved.builds;
         builds.push(this);
         Saved.builds = builds;
     }
-
 }
 
 export enum EBuildStatus {
