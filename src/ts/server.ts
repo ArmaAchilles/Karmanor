@@ -37,6 +37,8 @@ export default class Server {
                     this.fields = fields,
                     this.files = files;
 
+                    // TODO: Add some type checking for inputs (if zip wasn't provided, etc.)
+
                     const processor = new Processor(this.accessToken, this.zip);
 
                     if (processor.isRequestValid()) {
