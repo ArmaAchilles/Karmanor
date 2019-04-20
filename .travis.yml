@@ -1,0 +1,19 @@
+language: node_js
+cache: npm
+
+os:
+  - linux
+  - osx
+
+before_script:
+- npm ci
+
+script:
+- npm run development:test
+- npm test
+
+notifications:
+  email: false
+
+after_success:
+  - codecov

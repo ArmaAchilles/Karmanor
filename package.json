@@ -16,7 +16,10 @@
     "pack:force": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --overwrite",
     "pack:all": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all",
     "pack:all:force": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all --overwrite",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'"
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "development:test": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --env.mixfile=webpack.test.js",
+    "watch:test": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --env.mixfile=webpack.test.js",
+    "test": "jest test/build --config=jest.config.js"
   },
   "repository": {
     "type": "git",
@@ -29,12 +32,16 @@
   },
   "homepage": "https://github.com/ArmaAchilles/Karmanor#readme",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-transform-typescript": "^7.4.0",
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/chartist": "^0.9.44",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/electron-settings": "^3.1.1",
     "@types/extract-zip": "^1.6.2",
     "@types/faker": "^4.1.5",
+    "@types/jest": "^24.0.11",
     "@types/jquery": "^3.3.29",
     "@types/jszip": "^3.1.5",
     "@types/lodash": "^4.14.123",
@@ -56,6 +63,7 @@
     "eslint-plugin-vue": "^5.2.2",
     "extract-zip": "^1.6.7",
     "faker": "^4.1.0",
+    "jest": "^24.7.1",
     "jquery": "^3.4.0",
     "jszip": "^3.2.1",
     "laravel-mix": "^4.0.15",
