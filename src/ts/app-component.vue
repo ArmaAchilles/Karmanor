@@ -17,11 +17,3 @@
         </div>
     </transition>
 </template>
-
-<script>
-    export default {
-        mounted() {
-            //
-        }
-    }
-</script>
