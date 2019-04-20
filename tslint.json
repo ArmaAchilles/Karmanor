@@ -16,7 +16,6 @@
         "label-position": true,
         "file-name-casing": [true, "camel-case"],
         "newline-before-return": true,
-        "no-magic-numbers": true,
         "no-namespace": true,
         "no-null-keyword": true,
         "no-var-keyword": true,

@@ -50,7 +50,6 @@ export default class Test {
                             assert.strictEqual(fs.existsSync(zip.path), false);
 
                             // 4 seconds
-                            // tslint:disable-next-line: no-magic-numbers
                         }, 4 * 1000);
 
                         server.stop();
@@ -98,7 +97,6 @@ export default class Test {
     }
 
     private static generateBoundary(): string {
-        // tslint:disable: no-magic-numbers
         let boundary = '--------------------------';
         for (let i = 0; i < 24; i++) {
             boundary += Math.floor(Math.random() * 10).toString(16);

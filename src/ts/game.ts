@@ -67,7 +67,6 @@ export default class Game implements IGame {
             });
 
             // 15 minutes
-            // tslint:disable-next-line: no-magic-numbers
             const timeToWait = 15 * 1000 * 60;
 
             // 15 minutes timeout if something went wrong

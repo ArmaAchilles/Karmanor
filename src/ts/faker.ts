@@ -66,7 +66,6 @@ export default class Faker {
             writtenTimes++;
 
             // 3-12 seconds
-            // tslint:disable-next-line: no-magic-numbers
             const timeToWait = _.random(3, 12) * 1000;
 
             setTimeout(() => {
