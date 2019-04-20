@@ -10,14 +10,6 @@ import Game from "./game";
 export default class Faker {
     game: Game;
 
-    launchGame() {
-        new Game({
-            executable: 'cat',
-            parameters: '',
-            rpt: this.createRpt(),
-        });
-    }
-
     createRpt(): string {
         let date = new Date();
 

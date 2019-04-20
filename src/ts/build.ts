@@ -28,8 +28,7 @@ export default class Build {
 
         Zip.remove(this.zip.path);
 
-        // TODO: Process arguments (unpackedDirectory and offer other variables in Settings view)
-        let game = new Game(Saved.game);
+        let game = new Game(Saved.game, unpackedDirectory);
 
         game.start();
 

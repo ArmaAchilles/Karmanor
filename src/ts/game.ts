@@ -5,6 +5,7 @@ import { Tail } from 'tail';
 import { spawn, ChildProcess } from 'child_process';
 import { EBuildStatus } from './build';
 import File from './file';
+import { Saved } from './settings';
 
 export default class Game implements IGame {
     executable: string;
@@ -14,10 +15,10 @@ export default class Game implements IGame {
     private process: ChildProcess;
     exitCode: number = -1;
 
-    constructor(data: IGame) {
-        this.executable = data.executable;
-        this.parameters = data.parameters;
-        this.rpt = data.rpt;
+    constructor(game: IGame, unpackedDirectory: string) {
+        this.executable = game.executable;
+        this.parameters = this.processArguments(unpackedDirectory);
+        this.rpt = game.rpt;
     }
 
     get latestRpt(): string {
@@ -75,6 +76,26 @@ export default class Game implements IGame {
                 }
             }, 15 * 1000 * 60)
         });
+    }
+
+    /**
+     * Converts argument string from settings to string with actual variable data.
+     *
+     * Available variables for usage in string:
+     *  - `${executableDirectory}` Directory where the game executable is stored. `/some/dir/`
+     *  - `${executableFile}` Full filepath to the game's executable. `/some/dir/arma3_x64.exe`
+     *  - `${unpackedDirectory}` Directory where the ZIP was unpacked. `/some/dir/aRandomHash/`
+     *
+     * @param unpackedDirectory Path to the directory where the ZIP was extracted.
+     */
+    private processArguments(unpackedDirectory: string): string {
+        let args = Saved.game.parameters;
+
+        args.replace('${executableDirectory}', File.directoryFromFilepath(Saved.game.executable));
+        args.replace('${executableFile}', Saved.game.executable);
+        args.replace('${unpackedDirectory}', unpackedDirectory);
+
+        return args;
     }
 }
 
