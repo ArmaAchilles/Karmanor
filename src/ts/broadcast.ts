@@ -1,11 +1,21 @@
 import Build from "./build";
 
 export default class Broadcast {
-    static toDiscord(build: Build) {
-        //
+    private build: Build;
+
+    constructor(build: Build) {
+        this.build = build;
     }
 
-    static toSlack(build: Build) {
-        //
+    toDiscord(): this {
+        return this;
+    }
+
+    toSlack(): this {
+        return this;
+    }
+
+    toGitHub(): this {
+        return this;
     }
 }
