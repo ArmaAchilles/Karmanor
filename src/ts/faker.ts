@@ -59,7 +59,7 @@ export default class Faker {
         return faker.lorem.slug();
     }
 
-    public writeToRpt(filepath: string, timesToWrite = 15) {
+    public writeToRpt(filepath: string, timesToWrite = 15, delay?: number) {
         let writtenTimes = 0;
 
         while (writtenTimes < timesToWrite) {
@@ -71,7 +71,7 @@ export default class Faker {
 
             setTimeout(() => {
                 this.writeRpt(filepath, faker.lorem.sentence());
-            }, timeToWait);
+            }, delay ? delay * 1000 : timeToWait);
         }
     }
 
