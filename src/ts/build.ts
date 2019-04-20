@@ -52,7 +52,7 @@ export default class Build {
         );
     }
 
-    public getStatus(): EBuildStatus {
+    getStatus(): EBuildStatus {
         return this.status;
     }
 
