@@ -21,6 +21,8 @@ export default class Build {
         this.status = EBuildStatus.pending;
         this.timeCreated = new Date();
 
+        events.$emit('build-started', this);
+
         let unpackedDirectory =
             await Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
 
@@ -69,6 +71,8 @@ export default class Build {
 
         this.status = status;
         this.timeFinished = new Date();
+
+        events.$emit('build-finished', this);
     }
 
     private save() {

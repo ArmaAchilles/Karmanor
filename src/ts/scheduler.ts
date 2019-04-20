@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 
 import Build, { EBuildStatus } from "./build";
+import { events } from './flash';
 
 export default class Scheduler {
     private builds: Build[];
@@ -12,10 +13,14 @@ export default class Scheduler {
         if (! this.currentBuild) {
             this.setCurrentBuild(build);
         }
+
+        events.$emit('scheduler-added', this);
     }
 
     remove(build: Build): void {
         _.pull(this.builds, build);
+
+        events.$emit('scheduler-removed', this);
     }
 
     getAll(): Build[] {
@@ -34,6 +39,8 @@ export default class Scheduler {
             this.clearCurrentBuild();
             this.setNextCurrentBuild();
         });
+
+        events.$emit('scheduler-new-build', this);
     }
 
     private setNextCurrentBuild(): void {
