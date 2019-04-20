@@ -1,50 +1,53 @@
-import { flash, events } from './flash';
+import { events, flash } from './flash';
 
 import * as http from 'http';
 import * as multiparty from 'multiparty';
 
-import { Saved } from './settings';
+import Saved from './saved';
 import Zip, { IZip } from './zip';
 
 export interface IFields {
-    accessToken: string[],
+    accessToken: string[];
 }
 
 export interface IFiles {
-    zip: [IZip],
+    zip: [IZip];
 }
 
 export default class Server {
-    server: http.Server;
-    port: number | string;
+    public server?: http.Server;
+    public port: number | string;
 
-    fields: IFields;
-    files: IFiles;
+    public fields?: IFields;
+    public files?: IFiles;
 
     constructor(port: number | string) {
         this.port = port;
     }
 
-    start(): Promise<Server> {
+    public start(): Promise<Server> {
         return new Promise((resolve, reject) => {
-            let server = http.createServer((request, response) => {
-                let form = new multiparty.Form({
+            const server = http.createServer((request, response) => {
+                const form = new multiparty.Form({
                     uploadDir: Saved.downloadDirectory,
                 });
 
-                form.parse(request, (_error, fields: IFields, files: IFiles) => {
-                    this.fields = fields,
+                form.parse(request, (error, fields: IFields, files: IFiles) => {
+                    this.fields = fields;
                     this.files = files;
 
-                    if (this.accessToken === undefined) {
-                        if (this.zip !== undefined) Zip.remove(this.zip.path);
-
+                    if (! this.accessToken) {
+                        if (this.zip) { Zip.remove(this.zip.path); }
                         this.writeResponse(response, EHttpStatus.badRequest);
+
+                        return;
                     }
 
-                    if (this.zip === undefined) {
+                    if (! this.zip) {
                         this.writeResponse(response, EHttpStatus.badRequest);
-                    };
+
+                        return;
+                    }
 
                     if (this.isRequestValid(this.accessToken)) {
                         this.writeResponse(response, EHttpStatus.ok);
@@ -72,7 +75,7 @@ export default class Server {
 
             server.on('error', error => {
                 reject(error);
-            })
+            });
 
             this.server = server;
 
@@ -80,7 +83,7 @@ export default class Server {
         });
     }
 
-    restart(): void {
+    public restart(): void {
         this.stop();
 
         events.$on('server-stopped', () => {
@@ -88,16 +91,18 @@ export default class Server {
         });
     }
 
-    stop(): void {
-        this.server.close();
+    public stop(): void {
+        if (this.server) {
+            this.server.close();
+        }
     }
 
-    isRequestValid(accessToken: string): boolean {
+    public isRequestValid(accessToken: string): boolean {
         return accessToken === Saved.accessToken;
     }
 
     private writeResponse(response: http.ServerResponse, code: EHttpStatus = EHttpStatus.ok): void {
-        if (code == EHttpStatus.ok) {
+        if (code === EHttpStatus.ok) {
             response.writeHead(code, { 'Content-Type': 'text/html' });
 
             events.$emit('server-data-received', this.accessToken, this.zip);
@@ -113,23 +118,27 @@ export default class Server {
     }
 
     get accessToken(): string | undefined {
-        try {
-            return this.fields.accessToken[0];
-        } catch (error) {
-            return undefined;
+        if (this.fields) {
+            if (this.fields.accessToken[0]) {
+                return this.fields.accessToken[0];
+            }
         }
+
+        return undefined;
     }
 
     get zip(): IZip | undefined {
-        try {
-            return this.files.zip[0];
-        } catch (error) {
-            return undefined;
+        if (this.files) {
+            if (this.files.zip[0]) {
+                return this.files.zip[0];
+            }
         }
+
+        return undefined;
     }
 }
 
-enum EHttpStatus {
+export enum EHttpStatus {
     ok = 200,
     badRequest = 400,
     forbidden = 403,

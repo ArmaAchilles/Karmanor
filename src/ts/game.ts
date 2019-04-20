@@ -1,19 +1,18 @@
 import * as _ from 'lodash';
 
+import { ChildProcess, spawn } from 'child_process';
 import { Tail } from 'tail';
-
-import { spawn, ChildProcess } from 'child_process';
 import { EBuildStatus } from './build';
 import File from './file';
-import { Saved } from './settings';
+import Saved from './saved';
 
 export default class Game implements IGame {
-    executable: string;
-    parameters: string;
-    rpt: string;
+    public executable: string;
+    public parameters: string;
+    public rpt: string;
 
-    private process: ChildProcess;
-    exitCode: number = -1;
+    public exitCode: number = -1;
+    private process?: ChildProcess;
 
     constructor(game: IGame, unpackedDirectory: string) {
         this.executable = game.executable;
@@ -25,32 +24,32 @@ export default class Game implements IGame {
         return File.getLatestFile(this.rpt);
     }
 
-    start() {
+    public start() {
         this.process = spawn(this.executable, [this.parameters]);
 
         this.process.on('close', exitCode => {
             this.exitCode = exitCode;
 
-            this.process = null;
+            this.process = undefined;
         });
     }
 
-    close() {
+    public close() {
         // If process has already exited
-        if (this.exitCode !== -1) return;
+        if (this.exitCode !== -1 || ! this.process) { return; }
 
         this.process.kill();
     }
 
-    readRpt(): Promise<EBuildStatus> {
+    public readRpt(): Promise<EBuildStatus> {
         return new Promise(resolve => {
-            let tail = new Tail(this.latestRpt);
+            const tail = new Tail(this.latestRpt);
 
             tail.on('line', text => {
                 if (text.includes('Karmanor: Build failed.')) {
                     tail.unwatch();
 
-                    resolve(EBuildStatus.failed)
+                    resolve(EBuildStatus.failed);
                 }
 
                 if (text.includes('Karmanor: Build passed.')) {
@@ -67,6 +66,10 @@ export default class Game implements IGame {
                 }
             });
 
+            // 15 minutes
+            // tslint:disable-next-line: no-magic-numbers
+            const timeToWait = 15 * 1000 * 60;
+
             // 15 minutes timeout if something went wrong
             setTimeout(() => {
                 if (tail !== undefined) {
@@ -74,7 +77,7 @@ export default class Game implements IGame {
 
                     resolve(EBuildStatus.broken);
                 }
-            }, 15 * 1000 * 60)
+            }, timeToWait);
         });
     }
 
@@ -89,7 +92,7 @@ export default class Game implements IGame {
      * @param unpackedDirectory Path to the directory where the ZIP was extracted.
      */
     private processArguments(unpackedDirectory: string): string {
-        let args = Saved.game.parameters;
+        const args = Saved.game.parameters;
 
         args.replace('${executableDirectory}', File.directoryFromFilepath(Saved.game.executable));
         args.replace('${executableFile}', Saved.game.executable);
@@ -100,7 +103,7 @@ export default class Game implements IGame {
 }
 
 export interface IGame {
-    executable: string,
-    parameters: string,
-    rpt: string,
+    executable: string;
+    parameters: string;
+    rpt: string;
 }

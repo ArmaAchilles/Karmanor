@@ -10,9 +10,18 @@ Vue.use(VueRouter);
 
 // Auto register all Vue components
 const files = require.context('./', true, /\.vue$/i);
-files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
+files.keys().map(key => {
+    const splitKey = key.split('/').pop();
+    if (splitKey !== undefined) {
+        Vue.component(
+            splitKey.split('.')[0],
+            files(key).default,
+        );
+    }
+});
 
+// tslint:disable-next-line: no-unused-expression
 new Vue({
     el: '#app',
-    router: router()
+    router: router(),
 });

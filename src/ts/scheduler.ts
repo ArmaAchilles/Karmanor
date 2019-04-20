@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 
-import Build, { EBuildStatus } from "./build";
+import Build, { EBuildStatus } from './build';
 import { events } from './flash';
 
 export default class Scheduler {
-    private builds: Build[];
-    private currentBuild: Build;
+    private builds: Build[] = [];
+    private currentBuild?: Build;
 
-    add(build: Build): void {
+    public add(build: Build): void {
         this.builds.push(build);
 
         if (! this.currentBuild) {
@@ -17,19 +17,21 @@ export default class Scheduler {
         events.$emit('scheduler-added', this);
     }
 
-    remove(build: Build): void {
+    public remove(build: Build): void {
         _.pull(this.builds, build);
 
         events.$emit('scheduler-removed', this);
     }
 
-    getAll(): Build[] {
+    public getAll(): Build[] {
         return this.builds;
     }
 
     private clearCurrentBuild(): void {
-        this.remove(this.currentBuild);
-        this.currentBuild = undefined;
+        if (this.currentBuild) {
+            this.remove(this.currentBuild);
+            this.currentBuild = undefined;
+        }
     }
 
     private setCurrentBuild(build: Build): void {
@@ -45,11 +47,14 @@ export default class Scheduler {
 
     private setNextCurrentBuild(): void {
         if (this.builds) {
-            let pendingBuild = _.find(this.builds, (build: Build) => {
+            const pendingBuild = _.find(this.builds, (build: Build) => {
                 return build.getStatus() === EBuildStatus.pending;
             });
 
-            this.setCurrentBuild(pendingBuild);
+            if (pendingBuild) {
+                this.setCurrentBuild(pendingBuild);
+
+            }
         }
     }
 }

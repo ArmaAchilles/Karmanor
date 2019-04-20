@@ -1,51 +1,42 @@
-import * as fs from 'fs';
 import * as assert from 'assert';
+import * as fs from 'fs';
 
 import axios from 'axios';
 import Faker from './faker';
-import Server from './server';
-import { Saved } from './settings';
-import { events } from './flash';
-import Zip, { IZip } from './zip';
 import File from './file';
+import { events } from './flash';
+import Saved from './saved';
+import Server, { EHttpStatus } from './server';
+import Zip, { IZip } from './zip';
 
 export default class Test {
-    private static generateBoundary(): string {
-        let boundary = '--------------------------';
-        for (let i = 0; i < 24; i++) {
-            boundary += Math.floor(Math.random() * 10).toString(16);
-        }
-
-        return boundary;
-    }
-
-    static requests(fail?: false): Promise<boolean> {
+    public static requests(fail?: false): Promise<boolean> {
         return new Promise(async (resolve, reject) => {
             try {
-                let faker = new Faker();
+                const faker = new Faker();
 
                 // Generate some zip file
-                let zipPath = await faker.zip();
+                const zipPath = await faker.zip();
 
                 // Start server if not started
                 new Server(Saved.port).start().then(server => {
                     // Make POST request to itself with zip (if fail then provide a random token)
-                    let address = `http://127.0.0.1:${Saved.port}`;
+                    const address = `http://127.0.0.1:${Saved.port}`;
 
-                    let zip = File.base64ToBlob(fs.readFileSync(zipPath).toString('base64'), 'application/zip');
+                    const zipData = File.base64ToBlob(fs.readFileSync(zipPath).toString('base64'), 'application/zip');
 
-                    let form = new FormData();
+                    const form = new FormData();
 
-                    form.append('zip', zip);
+                    form.append('zip', zipData);
 
                     form.append('accessToken', fail ? faker.slug() : Saved.accessToken);
 
                     axios.post(address, form, {
                         headers: {
-                            'content-type': 'multipart/form-data; boundary=' + this.generateBoundary()
+                            'content-type': 'multipart/form-data; boundary=' + this.generateBoundary(),
                         },
                     }).then(response => {
-                        fail ? reject(fail) : assert.strictEqual(response.data, 200);
+                        fail ? reject(fail) : assert.strictEqual(response.data, EHttpStatus.ok);
                     }).catch(error => {
                         fail ? resolve(true) : reject(error);
                     });
@@ -57,6 +48,9 @@ export default class Test {
                         // Need a delay because the file is removed in Processor after some time
                         setTimeout(() => {
                             assert.strictEqual(fs.existsSync(zip.path), false);
+
+                            // 4 seconds
+                            // tslint:disable-next-line: no-magic-numbers
                         }, 4 * 1000);
 
                         server.stop();
@@ -74,9 +68,9 @@ export default class Test {
                         events.$on('zip-extracted', () => {
                             assert.strictEqual(
                                 fs.existsSync(
-                                    Zip.unpackDirectory(zip.path, File.directoryFromFilepath(Saved.game.executable))
+                                    Zip.unpackDirectory(zip.path, File.directoryFromFilepath(Saved.game.executable)),
                                 ),
-                                true
+                                true,
                             );
 
                             server.stop();
@@ -101,5 +95,15 @@ export default class Test {
                 resolve(false);
             }
         });
+    }
+
+    private static generateBoundary(): string {
+        // tslint:disable: no-magic-numbers
+        let boundary = '--------------------------';
+        for (let i = 0; i < 24; i++) {
+            boundary += Math.floor(Math.random() * 10).toString(16);
+        }
+
+        return boundary;
     }
 }

@@ -1,19 +1,19 @@
 import VueRouter from 'vue-router';
 
-export default () : VueRouter => {
+export default (): VueRouter => {
     return new VueRouter({
+        linkExactActiveClass: 'active',
         routes: [
             {
-                path: '/',
                 component: require('./views/home-view.vue').default,
-                name: 'Dashboard'
+                name: 'Dashboard',
+                path: '/',
             },
             {
-                path: '/settings',
                 component: require('./views/settings-view.vue').default,
-                name: 'Settings'
-            }
+                name: 'Settings',
+                path: '/settings',
+            },
         ],
-        linkExactActiveClass: 'active'
     });
 };

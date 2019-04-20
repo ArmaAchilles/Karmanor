@@ -1,11 +1,11 @@
 const { dialog } = require('electron').remote;
 
-import { FileFilter } from 'electron';
+import { FileFilter, remote } from 'electron';
 
 export default class Dialog {
-    static openDirectory(): string | null {
-        let directories = dialog.showOpenDialog(null, {
-            properties: ['openDirectory']
+    public static openDirectory(): string | undefined {
+        const directories = dialog.showOpenDialog(remote.getCurrentWindow(), {
+            properties: ['openDirectory'],
         });
 
         // If user canceled the dialog
@@ -13,11 +13,11 @@ export default class Dialog {
             return directories[0];
         }
 
-        return null;
+        return undefined;
     }
 
-    static openFile(fileFilter?: FileFilter[]): string | null {
-        let files = dialog.showOpenDialog(null, {
+    public static openFile(fileFilter?: FileFilter[]): string | undefined {
+        const files = dialog.showOpenDialog(remote.getCurrentWindow(), {
             filters: fileFilter,
             properties: ['openFile'],
         });
@@ -27,6 +27,6 @@ export default class Dialog {
             return files[0];
         }
 
-        return null;
+        return undefined;
     }
 }

@@ -1,41 +1,40 @@
-import * as _ from 'lodash';
 import * as fs from 'fs';
+import * as _ from 'lodash';
 
-import Zip, { IZip } from "./zip";
-import File from "./file";
-import { Saved } from "./settings";
-import { events } from "./flash";
-import Game from "./game";
+import File from './file';
+import { events } from './flash';
+import Game from './game';
+import Saved from './saved';
+import Zip, { IZip } from './zip';
 
 export default class Build {
+    public timeCreated: Date;
+    public timeFinished?: Date;
     private status: EBuildStatus;
-    timeCreated: Date;
-    timeFinished: Date;
 
     private zip: IZip;
 
     constructor(zip: IZip) {
         this.zip = zip;
-    }
-
-    async start() {
         this.status = EBuildStatus.pending;
         this.timeCreated = new Date();
+    }
 
+    public async start() {
         events.$emit('build-started', this);
 
-        let unpackedDirectory =
+        const unpackedDirectory =
             await Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
 
         events.$emit('zip-extracted');
 
         Zip.remove(this.zip.path);
 
-        let game = new Game(Saved.game, unpackedDirectory);
+        const game = new Game(Saved.game, unpackedDirectory);
 
         game.start();
 
-        let reportedStatus = await game.readRpt();
+        const reportedStatus = await game.readRpt();
 
         game.close();
 
@@ -46,8 +45,16 @@ export default class Build {
         this.save();
     }
 
-    private lastBuildStatus(): EBuildStatus {
-        return _.last(Saved.builds).status;
+    public getStatus(): EBuildStatus {
+        return this.status;
+    }
+
+    private lastBuildStatus(): EBuildStatus | undefined {
+        const lastBuild = _.last(Saved.builds);
+
+        if (! lastBuild) { return; }
+
+        return lastBuild.status;
     }
 
     private didLastBuildFail(): boolean {
@@ -55,10 +62,6 @@ export default class Build {
             this.lastBuildStatus() === EBuildStatus.failed ||
             this.lastBuildStatus() === EBuildStatus.stillFailing
         );
-    }
-
-    getStatus(): EBuildStatus {
-        return this.status;
     }
 
     private setStatus(reportedStatus: EBuildStatus) {
@@ -79,7 +82,7 @@ export default class Build {
     }
 
     private save() {
-        let builds = Saved.builds;
+        const builds = Saved.builds;
         builds.push(this);
         Saved.builds = builds;
     }

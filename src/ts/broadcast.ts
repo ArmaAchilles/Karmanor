@@ -1,4 +1,4 @@
-import Build from "./build";
+import Build from './build';
 
 export default class Broadcast {
     private build: Build;
@@ -7,15 +7,15 @@ export default class Broadcast {
         this.build = build;
     }
 
-    toDiscord(): this {
+    public toDiscord(): this {
         return this;
     }
 
-    toSlack(): this {
+    public toSlack(): this {
         return this;
     }
 
-    toGitHub(): this {
+    public toGitHub(): this {
         return this;
     }
 }

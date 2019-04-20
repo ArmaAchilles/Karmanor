@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
-let mainWindow: Electron.BrowserWindow;
+let mainWindow: Electron.BrowserWindow | undefined;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -16,18 +16,23 @@ function createWindow() {
 
     mainWindow.on('close', () => {
         // TODO: Save chart data to settings
-        mainWindow.webContents.send('chart-save');
+        if (mainWindow) {
+            mainWindow.webContents.send('chart-save');
+        }
     });
 
     mainWindow.on('closed', () => {
-        mainWindow = null;
+        mainWindow = undefined;
     });
 
     if (process.env.NODE_ENV !== 'production' && !process.env.VSCODE_DEBUG) {
         const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 
         installExtension(VUEJS_DEVTOOLS).then(() => {
-            mainWindow.webContents.openDevTools();
+            if (mainWindow) {
+                mainWindow.webContents.openDevTools();
+            }
+        // tslint:disable-next-line: no-console
         }).catch((err: Error) => console.error(err));
     }
 }
@@ -38,12 +43,10 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
-})
+});
 
 app.on('activate', () => {
-    if (mainWindow === null) {
+    if (! mainWindow) {
         createWindow();
     }
 });
-
-

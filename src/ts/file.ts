@@ -1,24 +1,24 @@
-import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
+import * as path from 'path';
 
 export default class File {
-    static filenameWithExtension(filepath: string): string {
-        return _.last(filepath.split(path.sep));
+    public static filenameWithExtension(filepath: string): string {
+        return path.parse(filepath).base;
     }
 
-    static filenameWithoutExtension(filepath: string): string {
+    public static filenameWithoutExtension(filepath: string): string {
         return path.parse(filepath).name;
     }
 
-    static directoryFromFilepath(filepath: string): string {
+    public static directoryFromFilepath(filepath: string): string {
         return _.join(path.join(filepath, '../').split(path.sep), path.sep);
     }
 
-    static base64ToBlob(base64: string, mime: string): Blob {
-        let byteString = atob(base64);
+    public static base64ToBlob(base64: string, mime: string): Blob {
+        const byteString = atob(base64);
 
-        let intArray = new Uint8Array(byteString.length);
+        const intArray = new Uint8Array(byteString.length);
         for (let i = 0; i < byteString.length; i++) {
             intArray[i] = byteString.charCodeAt(i);
         }
@@ -26,20 +26,20 @@ export default class File {
         return new Blob([intArray], { type: mime });
     }
 
-    static getLatestFile(directory: string): string {
-        let files = fs.readdirSync(directory);
+    public static getLatestFile(directory: string): string {
+        const files = fs.readdirSync(directory);
 
-        let modificationTimes: { filePath: string, difference: number }[];
+        const modificationTimes: { difference: number, filePath: string }[] = [];
 
         files.forEach(file => {
-            let filePath = path.join(directory, file);
+            const filePath = path.join(directory, file);
 
-            let dateCreated = fs.statSync(filePath).ctime;
+            const dateCreated = fs.statSync(filePath).ctime;
 
-            let difference = new Date().getTime() - dateCreated.getTime()
+            const difference = new Date().getTime() - dateCreated.getTime();
 
             modificationTimes.push({
-                filePath, difference,
+                difference, filePath,
             });
         });
 

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import { Saved } from '../../settings';
+    import Saved from '../../saved';
     import Server from '../../server';
 
     export default {

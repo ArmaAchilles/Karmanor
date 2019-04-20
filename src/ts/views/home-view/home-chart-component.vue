@@ -46,7 +46,7 @@
 
 <script>
     import { ipcRenderer } from 'electron';
-    import { Saved } from '../../settings';
+    import Saved from '../../saved';
 
     export default {
         data() {

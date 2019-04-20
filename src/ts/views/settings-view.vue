@@ -65,7 +65,8 @@
 </template>
 
 <script>
-    import Settings, { Saved } from '../settings';
+    import Settings from '../settings';
+    import Saved from '../saved';
     import Dialog from '../dialog';
 
     export default {

@@ -2,25 +2,22 @@
 require('@fortawesome/fontawesome-free');
 
 // Bootstrap 4 requirements
-try {
-    (<any>window).Popper = require('popper.js').default;
+window.Popper = require('popper.js').default;
 
-    const $ = require('jquery');
-    (<any>window).$ = (<any>window).jQuery = $;
+window.$ = window.jQuery = require('jquery');
 
-    // Import Material Design JS
-    require('bootstrap-material-design');
+// Import Material Design JS
+require('bootstrap-material-design');
 
-    $(document).ready(function () { $('body').bootstrapMaterialDesign(); });
-} catch (e) { };
+jQuery(() => $('body').bootstrapMaterialDesign());
 
 // Import flash messaging
 import './flash';
 
 // Import Axios
-(<any>window).axios = require('axios');
+window.axios = require('axios');
 
 // Add lodash
-(<any>window)._ = require('lodash');
+window._ = require('lodash');
 
-(<any>window).NODE_ENV = process.env.NODE_ENV;
+window.NODE_ENV = process.env.NODE_ENV || 'development';
