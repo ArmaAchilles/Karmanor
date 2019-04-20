@@ -1,9 +1,10 @@
 import * as faker from 'faker';
 import * as fs from 'fs';
-import * as JSZip from 'jszip';
 import * as _ from 'lodash';
 import * as os from 'os';
 import * as path from 'path';
+
+const JSZip = require('jszip');
 
 export default class Faker {
     public createRpt(): string {
@@ -59,18 +60,18 @@ export default class Faker {
         return faker.lorem.slug();
     }
 
-    public writeToRpt(filepath: string, timesToWrite = 15, delay?: number) {
+    public writeToRpt(filepath: string, timesToWrite = 5, delayInSeconds?: number) {
         let writtenTimes = 0;
 
         while (writtenTimes < timesToWrite) {
             writtenTimes++;
 
-            // 3-12 seconds
-            const timeToWait = _.random(3, 12) * 1000;
+            // 1-2 seconds
+            const timeToWait = _.random(1, 3) * 1000;
 
             setTimeout(() => {
                 this.writeRpt(filepath, faker.lorem.sentence());
-            }, delay ? delay * 1000 : timeToWait);
+            }, delayInSeconds ? delayInSeconds * 1000 : timeToWait);
         }
     }
 
