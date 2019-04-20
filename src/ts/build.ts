@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as fs from 'fs';
 
 import Zip, { IZip } from "./zip";
 import File from "./file";
@@ -37,6 +38,8 @@ export default class Build {
         let reportedStatus = await game.readRpt();
 
         game.close();
+
+        fs.rmdirSync(unpackedDirectory);
 
         this.setStatus(reportedStatus);
 
