@@ -14,7 +14,7 @@ export default class Scheduler {
         }
     }
 
-    remove(build: Build) {
+    remove(build: Build): void {
         _.pull(this.builds, build);
     }
 
