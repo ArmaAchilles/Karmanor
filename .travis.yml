@@ -11,6 +11,7 @@ os:
 
 before_script:
 - npm ci
+- npm i codecov -g
 
 script:
 - npm run development:test
