@@ -19,7 +19,7 @@ export default class Faker {
 
         // Example: /tmp/someHash/arma3_x64_2019-03-10_22-16-36.rpt
         fs.writeFileSync(rptPath,
-            `Karmanor: Generated fake RPT file at ${date.toISOString()}.`,
+            `Karmanor: Generated fake RPT file at ${date.toISOString()}.\n`,
         );
 
         return rptPath;
