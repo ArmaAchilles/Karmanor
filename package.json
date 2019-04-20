@@ -17,9 +17,7 @@
     "pack:all": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all",
     "pack:all:force": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all --overwrite",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "development:test": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --env.mixfile=webpack.test.js",
-    "watch:test": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --env.mixfile=webpack.test.js",
-    "test": "jest test/build --config=jest.config.js"
+    "test": "jest tests/"
   },
   "repository": {
     "type": "git",
@@ -34,6 +32,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.4.3",
     "@babel/plugin-transform-typescript": "^7.4.0",
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/chartist": "^0.9.44",
