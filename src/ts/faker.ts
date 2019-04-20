@@ -94,8 +94,6 @@ export default class Faker {
     }
 
     private writeRpt(filepath: string, data: string) {
-        fs.writeFile(filepath, data, () => {
-            //
-        });
+        fs.appendFileSync(filepath, `${data}\n`);
     }
 }
