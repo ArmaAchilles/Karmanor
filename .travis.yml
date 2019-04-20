@@ -10,9 +10,10 @@ os:
 before_script:
 - npm ci
 - npm i codecov -g
+- npm run dev
 
 script:
-- npm run development:test
+- npm run lint
 - npm test
 
 notifications:
