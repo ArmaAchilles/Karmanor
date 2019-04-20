@@ -45,4 +45,12 @@ export default class File {
 
         return _.sortBy(modificationTimes, ['difference'])[0].filePath;
     }
+
+    public static isDirectory(possibleDirectory: string): boolean {
+        return fs.lstatSync(possibleDirectory).isDirectory();
+    }
+
+    public static getAllDirectories(directory: string): string[] {
+        return fs.readdirSync(directory).map(name => path.join(directory, name)).filter(this.isDirectory);
+    }
 }
