@@ -11,17 +11,16 @@ jobs:
       - script: npm ci & npm i codecov -g
         displayName: 'Install dependencies'
 
-      - task: Bash@3
-        inputs:
-          script: 'npm run dev'
+      - bash: 'npm run dev'
+        displayName: 'Compile Karmanor'
 
-      - script: npm run lint
+      - bash: npm run lint
         displayName: 'Lint code'
 
-      - script: npm run test
+      - bash: npm run test
         displayName: 'Test Karmanor'
 
-      - script: codecov
+      - bash: codecov
         displayName: 'Upload coverage'
         condition: succeeded()
 
@@ -33,14 +32,13 @@ jobs:
         inputs:
           versionSpec: '10.x'
 
-      - script: npm ci
+      - bash: npm ci
         displayName: 'Install dependencies'
 
-      - task: Bash@3
-        inputs:
-          script: 'npm run pack:all'
+      - bash: 'npm run pack:all'
+        displayName: 'Pack Karmanor for all platforms'
 
-      - script: move dist/ $(Build.BinariesDirectory)
+      - bash: mv dist/ $(Build.BinariesDirectory)
         displayName: 'Move dist directory to binary directory'
 
       - task: ArchiveFiles@2
