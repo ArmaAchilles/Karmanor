@@ -22,7 +22,10 @@ jobs:
     steps:
       - script: |
           npm ci
-          sudo apt install wine64
+          sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
+          sudo apt-get update
+          sudo apt-get install --install-recommends winehq-stable
+          wine --version
         displayName: 'Install dependencies'
 
       - script: 'npm run pack:all'
