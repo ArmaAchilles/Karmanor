@@ -31,10 +31,10 @@ jobs:
         displayName: 'Pack Karmanor for all platforms'
 
       - powershell: |
-          Compress-Archive -Path $(Build.Repository.LocalPath)/dist/* -CompressionLevel Optimal -DestinationPath $(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip
+          Compress-Archive -Path $(Build.Repository.LocalPath)/dist/* -CompressionLevel Optimal -DestinationPath $(Build.Repository.LocalPath)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip
         displayName: 'Zip Karmanor builds'
 
       - task: PublishBuildArtifacts@1
         inputs:
-          pathtoPublish: '$(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
+          pathtoPublish: '$(Build.Repository.LocalPath)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
           artifactName: 'Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
