@@ -22,9 +22,7 @@ jobs:
     steps:
       - script: |
           npm ci
-          sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
-          sudo apt-get update
-          sudo apt-get install wine-stable
+          sudo apt-get install wine-stable -y
           wine --version
         displayName: 'Install dependencies'
 
