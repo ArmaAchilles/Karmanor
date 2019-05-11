@@ -53,7 +53,7 @@ test('It is possible to write to a created RPT file', done => {
     tail.on('line', (text: string) => {
         writtenTimes++;
 
-        expect(text).toBeTruthy();
+        expect(text.length).toBeGreaterThan(0);
 
         if (writtenTimes === timesToWrite) {
             tail.unwatch();
@@ -76,7 +76,7 @@ test('A RPT can be created with its default values', done => {
     tail.on('line', (text: string) => {
         writtenTimes++;
 
-        expect(text).toBeTruthy();
+        expect(text.length).toBeGreaterThan(0);
 
         if (writtenTimes === timesToWrite) {
             tail.unwatch();
