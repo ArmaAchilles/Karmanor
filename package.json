@@ -17,7 +17,7 @@
     "pack:all": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all",
     "pack:all:force": "npm run prod && node_modules/electron-packager/cli.js ./build --out=dist/ --all --overwrite",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "jest tests/**/*.test.ts --maxWorkers=4",
+    "test": "jest --maxWorkers=4",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
