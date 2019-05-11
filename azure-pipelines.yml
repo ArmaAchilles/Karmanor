@@ -30,8 +30,7 @@ jobs:
         displayName: 'Pack Karmanor for all platforms'
 
       - bash: |
-          'zip -r9 Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip dist/'
-          'mv Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip $(Build.ArtifactStagingDirectory)'
+          'zip -r9 Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip $(Build.ArtifactStagingDirectory)/dist/'
         displayName: 'Zip Karmanor builds'
 
       - task: PublishBuildArtifacts@1
