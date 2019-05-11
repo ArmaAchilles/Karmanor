@@ -29,4 +29,4 @@
 | ------------- |:-----------------:|
 | Windows       | [![Build Status](https://dev.azure.com/ArmaAchilles/Achilles/_apis/build/status/ArmaAchilles.Karmanor?&jobName=Test)](https://dev.azure.com/ArmaAchilles/Achilles/_build/latest?definitionId=2)|
 | Linux & Mac OS X        | ![Build Status](https://img.shields.io/travis/com/ArmaAchilles/Karmanor.svg?label=Travis%20CI&logo=travis-ci&logoColor=white)     |
-| Build packing | [![Build Status](https://dev.azure.com/ArmaAchilles/Achilles/_apis/build/status/ArmaAchilles.Karmanor?jobName=Build)](https://dev.azure.com/ArmaAchilles/Achilles/_build/latest?definitionId=2) |
+<!-- | Build packing | [![Build Status](https://dev.azure.com/ArmaAchilles/Achilles/_apis/build/status/ArmaAchilles.Karmanor?jobName=Build)](https://dev.azure.com/ArmaAchilles/Achilles/_build/latest?definitionId=2) | -->

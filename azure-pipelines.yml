@@ -16,25 +16,25 @@ jobs:
       - bash: npm run test
         displayName: 'Test Karmanor'
 
-  - job: Build
-    pool:
-      vmImage: 'vs2017-win2016'
-    steps:
-      - bash: |
-          npm ci
-        displayName: 'Install dependencies'
+  # - job: Build
+  #   pool:
+  #     vmImage: 'vs2017-win2016'
+  #   steps:
+  #     - bash: |
+  #         npm ci
+  #       displayName: 'Install dependencies'
 
-      - bash: npm run production
-        displayName: 'Compile Karmanor'
+  #     - bash: npm run production
+  #       displayName: 'Compile Karmanor'
 
-      - bash: 'npm run pack:all'
-        displayName: 'Pack Karmanor for all platforms'
+  #     - bash: 'npm run pack:all'
+  #       displayName: 'Pack Karmanor for all platforms'
 
-      - powershell: |
-          Compress-Archive -Path $(Build.Repository.LocalPath)/dist/* -CompressionLevel Optimal -DestinationPath $(Build.Repository.LocalPath)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip
-        displayName: 'Zip Karmanor builds'
+  #     - powershell: |
+  #         Compress-Archive -Path $(Build.Repository.LocalPath)/dist/* -CompressionLevel Optimal -DestinationPath $(Build.Repository.LocalPath)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip
+  #       displayName: 'Zip Karmanor builds'
 
-      - task: PublishBuildArtifacts@1
-        inputs:
-          pathtoPublish: '$(Build.Repository.LocalPath)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
-          artifactName: 'Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
+  #     - task: PublishBuildArtifacts@1
+  #       inputs:
+  #         pathtoPublish: '$(Build.Repository.LocalPath)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
+  #         artifactName: 'Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
