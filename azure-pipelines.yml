@@ -20,7 +20,9 @@ jobs:
     pool:
       vmImage: 'vs2017-win2016'
     steps:
-      - bash: npm ci
+      - bash: |
+          sudo apt-get install zip
+          npm ci
         displayName: 'Install dependencies'
 
       - bash: npm run production
@@ -29,13 +31,9 @@ jobs:
       - bash: 'npm run pack:all'
         displayName: 'Pack Karmanor for all platforms'
 
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: '$(Build.Repository.LocalPath)/dist'
-          includeRootFolder: false
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
-          replaceExistingArchive: true
+      - bash: |
+          'zip -r9 $(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip $(Build.Repository.LocalPath)/dist/'
+        displayName: 'Zip Karmanor builds'
 
       - task: PublishBuildArtifacts@1
         inputs:
