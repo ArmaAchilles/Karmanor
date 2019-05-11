@@ -21,7 +21,6 @@ jobs:
       vmImage: 'vs2017-win2016'
     steps:
       - bash: |
-          sudo apt-get install zip
           npm ci
         displayName: 'Install dependencies'
 
@@ -31,8 +30,8 @@ jobs:
       - bash: 'npm run pack:all'
         displayName: 'Pack Karmanor for all platforms'
 
-      - bash: |
-          'zip -r9 $(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip $(Build.Repository.LocalPath)/dist/'
+      - powershell: |
+          Compress-Archive -Path $(Build.Repository.LocalPath)/dist/* -CompressionLevel Optimal -DestinationPath $(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip
         displayName: 'Zip Karmanor builds'
 
       - task: PublishBuildArtifacts@1
