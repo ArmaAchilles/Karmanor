@@ -19,6 +19,10 @@ script:
 
 notifications:
   email: false
+  webhooks:
+    urls:
+      - https://mechilles.garkaklis.com/
+    on_success: never
 
 after_success:
   - codecov
