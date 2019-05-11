@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as _ from 'lodash';
 import * as os from 'os';
 import * as path from 'path';
@@ -31,7 +31,7 @@ export default class Faker {
 
         const directory = path.join(os.tmpdir(), tempDirectory);
 
-        fs.renameSync(tempDirectory, directory);
+        fs.moveSync(tempDirectory, directory);
 
         return directory;
     }
