@@ -21,7 +21,7 @@ notifications:
   webhooks:
     urls:
       - https://mechilles.garkaklis.com/
-    on_success: never
+    on_success: change
 
 after_success:
   - codecov

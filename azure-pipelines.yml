@@ -21,7 +21,7 @@ jobs:
       vmImage: 'vs2017-win2016'
     steps:
       - bash: npm ci
-        displayName: 'Install npm dependencies'
+        displayName: 'Install dependencies'
 
       - bash: npm run production
         displayName: 'Compile Karmanor'
