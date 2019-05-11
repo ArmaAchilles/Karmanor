@@ -5,7 +5,4 @@ dist/*
 build/*
 !build/.gitkeep
 !build/package.json
-.nyc_output/
-test/mix-manifest.json
-test/build/*.js
-coverage/
+tests/coverage/

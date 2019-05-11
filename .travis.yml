@@ -25,4 +25,4 @@ notifications:
     on_success: never
 
 after_success:
-  - codecov
+  - codecov -s tests/coverage

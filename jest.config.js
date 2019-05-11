@@ -14,7 +14,7 @@ module.exports = {
     ],
 
     // The directory where Jest should output its coverage files
-    coverageDirectory: 'coverage',
+    coverageDirectory: 'tests/coverage',
 
     // An array of file extensions your modules use
     moduleFileExtensions: [
