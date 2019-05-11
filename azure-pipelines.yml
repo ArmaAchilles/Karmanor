@@ -7,7 +7,7 @@ jobs:
       - bash: npm ci
         displayName: 'Install dependencies'
 
-      - bash: npm run dev
+      - bash: npm run development
         displayName: 'Compile Karmanor'
 
       - bash: npm run lint
@@ -22,6 +22,9 @@ jobs:
     steps:
       - bash: npm ci
         displayName: 'Install npm dependencies'
+
+      - bash: npm run production
+        displayName: 'Compile Karmanor'
 
       - bash: 'npm run pack:all'
         displayName: 'Pack Karmanor for all platforms'
