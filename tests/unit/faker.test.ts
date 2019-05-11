@@ -26,7 +26,7 @@ test('A temp dir can be created and it exists', () => {
 
     expect(tempDir).toContain('karmanor');
 
-    expect(fs.existsSync(tempDir)).toBe(false);
+    expect(fs.existsSync(tempDir)).toBe(true);
     expect(fs.lstatSync(tempDir).isDirectory()).toBe(true);
 });
 
