@@ -29,15 +29,12 @@ jobs:
       - bash: 'npm run pack:all'
         displayName: 'Pack Karmanor for all platforms'
 
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: 'dist/'
-          includeRootFolder: false
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
-          replaceExistingArchive: true
+      - bash: |
+          'zip -r9 Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip dist/'
+          'mv Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip $(Build.ArtifactStagingDirectory)'
+        displayName: 'Zip Karmanor builds'
 
       - task: PublishBuildArtifacts@1
         inputs:
           pathtoPublish: '$(Build.ArtifactStagingDirectory)/Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
-          artifactName: Karmanor_$(Build.BuildId).zip
+          artifactName: 'Karmanor_$(Build.SourceBranchName)_$(Build.BuildId).zip'
