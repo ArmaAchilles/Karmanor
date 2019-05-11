@@ -8,10 +8,10 @@ jobs:
         inputs:
           versionSpec: '10.x'
 
-      - script: npm ci & npm i codecov -g
+      - bash: npm ci
         displayName: 'Install dependencies'
 
-      - bash: 'npm run dev'
+      - bash: npm run dev
         displayName: 'Compile Karmanor'
 
       - bash: npm run lint
@@ -20,25 +20,21 @@ jobs:
       - bash: npm run test
         displayName: 'Test Karmanor'
 
-      - bash: codecov
-        displayName: 'Upload coverage'
-        condition: succeeded()
-
   - job: Build
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'ubuntu-16.04'
     steps:
       - task: NodeTool@0
         inputs:
           versionSpec: '10.x'
 
-      - bash: npm ci
+      - script: npm ci
         displayName: 'Install dependencies'
 
-      - bash: 'npm run pack:all'
+      - script: 'npm run pack:all'
         displayName: 'Pack Karmanor for all platforms'
 
-      - bash: mv dist/ $(Build.BinariesDirectory)
+      - script: mv 'dist/' '$(Build.BinariesDirectory)'
         displayName: 'Move dist directory to binary directory'
 
       - task: ArchiveFiles@2
