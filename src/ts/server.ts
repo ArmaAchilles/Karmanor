@@ -114,7 +114,7 @@ export default class Server {
         return accessToken === Saved.accessToken;
     }
 
-    private writeResponse(response: http.ServerResponse, code: EHttpStatus = EHttpStatus.ok): void {
+    private writeResponse(response: http.ServerResponse, code: EHttpStatus): void {
         if (code === EHttpStatus.ok) {
             response.writeHead(code, { 'Content-Type': 'text/html' });
 
