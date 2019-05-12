@@ -42,10 +42,14 @@ test('The server can be started', done => {
     }).catch(error => { throw error; });
 });
 
-test(`The server can't be started`, done => {
-    const server = new Server(-1);
+test(`The server can't be started`, async done => {
+    await createdServer.start();
 
-    server.start().catch((error: Error) => { expect(error.message.length).toBeGreaterThan(0); done(); });
+    createdServer.server.on('error', () => {
+        done();
+    });
+
+    createdServer.server.emit('error', new Error('Test error'));
 });
 
 describe('The server can be stopped', () => {
@@ -206,5 +210,22 @@ describe('The server emits different status codes for requests', () => {
 
             done();
         });
+    });
+});
+
+test(`The server can't be restarted with this.start error`, done => {
+    createdServer.start().then(server => {
+        createdServer.start = jest.fn().mockRejectedValueOnce(new Error('Test error'));
+
+        server.restart().catch(() => done());
+    });
+});
+
+test(`The server can't be restarted with this.stop error`, done => {
+    createdServer.start().then(server => {
+        server.stop = jest.fn().mockRejectedValueOnce(new Error('Test error'))
+            .mockImplementation(() => server.server.close());
+
+        server.restart().catch(() => done());
     });
 });

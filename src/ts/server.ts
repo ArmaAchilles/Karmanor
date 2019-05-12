@@ -81,6 +81,8 @@ export default class Server {
             });
 
             server.on('error', error => {
+                events.$emit('server-error');
+
                 reject(error);
             });
 
