@@ -133,11 +133,7 @@ export default class Server {
     get accessToken(): string | undefined {
         if (this.fields) {
             if (this.fields.accessToken) {
-                if (this.fields.accessToken[0]) {
-                    return this.fields.accessToken[0];
-                }
-
-                return undefined;
+                return this.fields.accessToken[0];
             }
 
             return undefined;
@@ -149,11 +145,7 @@ export default class Server {
     get zip(): IZip | undefined {
         if (this.files) {
             if (this.files.zip) {
-                if (this.files.zip[0]) {
-                    return this.files.zip[0];
-                }
-
-                return undefined;
+                return this.files.zip[0];
             }
 
             return undefined;
