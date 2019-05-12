@@ -4,8 +4,11 @@ jobs:
       vmImage: 'vs2017-win2016'
 
     steps:
-      - bash: npm ci & npm i codecov -g
+      - bash: npm ci
         displayName: 'Install dependencies'
+
+      - bash: npm i codecov -g
+        displayName: 'Install codecov globally'
 
       - bash: npm run development
         displayName: 'Compile Karmanor'
@@ -18,6 +21,7 @@ jobs:
 
       - bash: codecov
         displayName: 'Upload coverage'
+        condition: succeeded()
 
   # - job: Build
   #   pool:
