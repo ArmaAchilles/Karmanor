@@ -1,10 +1,9 @@
 import { events, flash } from './flash';
+import Saved from './saved';
+import Zip, { IZip } from './zip';
 
 import * as http from 'http';
 import * as multiparty from 'multiparty';
-
-import Saved from './saved';
-import Zip, { IZip } from './zip';
 
 export interface IFields {
     accessToken: string[];
@@ -133,9 +132,15 @@ export default class Server {
 
     get accessToken(): string | undefined {
         if (this.fields) {
-            if (this.fields.accessToken[0]) {
-                return this.fields.accessToken[0];
+            if (this.fields.accessToken) {
+                if (this.fields.accessToken[0]) {
+                    return this.fields.accessToken[0];
+                }
+
+                return undefined;
             }
+
+            return undefined;
         }
 
         return undefined;
@@ -143,9 +148,15 @@ export default class Server {
 
     get zip(): IZip | undefined {
         if (this.files) {
-            if (this.files.zip[0]) {
-                return this.files.zip[0];
+            if (this.files.zip) {
+                if (this.files.zip[0]) {
+                    return this.files.zip[0];
+                }
+
+                return undefined;
             }
+
+            return undefined;
         }
 
         return undefined;

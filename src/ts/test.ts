@@ -33,7 +33,7 @@ export default class Test {
 
                     axios.post(address, form, {
                         headers: {
-                            'content-type': 'multipart/form-data; boundary=' + this.generateBoundary(),
+                            'content-type': 'multipart/form-data; boundary=' + File.generateBoundary(),
                         },
                     }).then(response => {
                         fail ? reject(fail) : assert.strictEqual(response.data, EHttpStatus.ok);
@@ -94,14 +94,5 @@ export default class Test {
                 resolve(false);
             }
         });
-    }
-
-    private static generateBoundary(): string {
-        let boundary = '--------------------------';
-        for (let i = 0; i < 24; i++) {
-            boundary += Math.floor(Math.random() * 10).toString(16);
-        }
-
-        return boundary;
     }
 }

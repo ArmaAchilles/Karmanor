@@ -3,7 +3,13 @@ import * as _ from 'lodash';
 
 export default class Settings {
     public static get(keyPath: string, defaultValue?: any): any {
-        return settings.get(keyPath, defaultValue);
+        const value = settings.get(keyPath);
+
+        if (value) {
+            return value;
+        } else {
+            return defaultValue;
+        }
     }
 
     public static has(keyPath: string): boolean {

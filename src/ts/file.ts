@@ -16,7 +16,7 @@ export default class File {
     }
 
     public static base64ToBlob(base64: string, mime: string): Blob {
-        const byteString = atob(base64);
+        const byteString = new Buffer(base64, 'base64').toString('binary');
 
         const intArray = new Uint8Array(byteString.length);
         for (let i = 0; i < byteString.length; i++) {
@@ -52,5 +52,14 @@ export default class File {
 
     public static getAllDirectories(directory: string): string[] {
         return fs.readdirSync(directory).map(name => path.join(directory, name)).filter(this.isDirectory);
+    }
+
+    public static generateBoundary(): string {
+        let boundary = '--------------------------';
+        for (let i = 0; i < 24; i++) {
+            boundary += Math.floor(Math.random() * 10).toString(16);
+        }
+
+        return boundary;
     }
 }
