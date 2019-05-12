@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 export default class Settings {
     public static get(keyPath: string, defaultValue?: any): any {
-        const value = settings.get(keyPath);
+        const value = settings.get(keyPath, defaultValue);
 
         if (value) {
             return value;
