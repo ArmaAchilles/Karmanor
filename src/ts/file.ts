@@ -15,17 +15,6 @@ export default class File {
         return _.join(path.join(filepath, '../').split(path.sep), path.sep);
     }
 
-    public static base64ToBlob(base64: string, mime: string): Blob {
-        const byteString = new Buffer(base64, 'base64').toString('binary');
-
-        const intArray = new Uint8Array(byteString.length);
-        for (let i = 0; i < byteString.length; i++) {
-            intArray[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([intArray], { type: mime });
-    }
-
     public static getLatestFile(directory: string): string {
         const files = fs.readdirSync(directory);
 
@@ -52,14 +41,5 @@ export default class File {
 
     public static getAllDirectories(directory: string): string[] {
         return fs.readdirSync(directory).map(name => path.join(directory, name)).filter(this.isDirectory);
-    }
-
-    public static generateBoundary(): string {
-        let boundary = '--------------------------';
-        for (let i = 0; i < 24; i++) {
-            boundary += Math.floor(Math.random() * 10).toString(16);
-        }
-
-        return boundary;
     }
 }
