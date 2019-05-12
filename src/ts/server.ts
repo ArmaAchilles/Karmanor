@@ -17,12 +17,14 @@ export interface IFiles {
 export default class Server {
     public server?: http.Server;
     public port: number | string;
+    public started: boolean;
 
     public fields?: IFields;
     public files?: IFiles;
 
     constructor(port: number | string) {
         this.port = port;
+        this.started = false;
     }
 
     public start(): Promise<Server> {
@@ -66,11 +68,17 @@ export default class Server {
             server.on('listening', () => {
                 events.$emit('server-started', this);
                 flash('Server started!');
+
+                this.started = true;
+
+                resolve(this);
             });
 
             server.on('close', () => {
                 events.$emit('server-stopped');
                 flash('Server stopped!');
+
+                this.started = false;
             });
 
             server.on('error', error => {
@@ -78,23 +86,29 @@ export default class Server {
             });
 
             this.server = server;
-
-            resolve(this);
         });
     }
 
-    public restart(): void {
-        this.stop();
-
-        events.$on('server-stopped', () => {
-            this.start();
+    public restart(): Promise<Server> {
+        return new Promise((resolve, reject) => {
+            this.stop().then(() => {
+                this.start().then(() => resolve(this)).catch(error => reject(error));
+            }).catch(error => reject(error));
         });
     }
 
-    public stop(): void {
-        if (this.server) {
-            this.server.close();
-        }
+    public stop(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.server) {
+                if (this.started) {
+                    this.server.close((error?: Error) => error ? reject(error) : resolve());
+                } else {
+                    resolve();
+                }
+            } else {
+                resolve();
+            }
+        });
     }
 
     public isRequestValid(accessToken: string): boolean {
