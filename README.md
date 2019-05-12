@@ -13,7 +13,7 @@
         <img src="https://img.shields.io/codecov/c/github/ArmaAchilles/Karmanor.svg?label=Coverage&logo=codecov&style=flat-square" />
     </a>
     <a href="https://discord.gg/pBhyTeN">
-        <img src="https://img.shields.io/discord/364823341506363392.svg?label=Discord&style=flat-square&colorB=7683D5">
+        <img src="https://img.shields.io/discord/364823341506363392.svg?label=Discord&logo=discord&logoColor=white&style=flat-square&colorB=7683D5">
     </a>
     <a href="https://github.com/ArmaAchilles/Karmanor/issues">
         <img src="https://img.shields.io/github/issues/ArmaAchilles/Karmanor.svg?label=Issues&logo=github&style=flat-square">
