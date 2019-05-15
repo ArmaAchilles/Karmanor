@@ -1,13 +1,16 @@
+import * as electron from 'electron';
 import * as fs from 'fs-extra';
 import * as http from 'http';
+import * as os from 'os';
 
 import axios from 'axios';
 import FormData from 'form-data';
 
 import Faker from '../../src/ts/faker';
 import { events } from '../../src/ts/flash';
-import Saved from '../../src/ts/saved';
 import Server, { EHttpStatus } from '../../src/ts/server';
+import Settings from '../../src/ts/settings';
+import { join } from 'path';
 
 const address = 'http://127.0.0.1:2566';
 let createdServer: Server;
@@ -25,8 +28,6 @@ beforeEach(() => {
 afterEach(() => {
     createdServer.stop();
 });
-
-jest.mock('electron-settings');
 
 test('Port is assigned in the class constructor', () => {
     expect(createdServer.port).toBe(2566);
@@ -121,7 +122,7 @@ test('The server emits a server-connection event on a connection', async done =>
 });
 
 test('Request validation sucessfully works with a correct access token', () => {
-    expect(createdServer.isRequestValid(Saved.accessToken)).toBe(true);
+    expect(createdServer.isRequestValid(Settings.get('accessToken').value)).toBe(true);
 });
 
 test('Request validation fails when a non-valid access token is passed', () => {

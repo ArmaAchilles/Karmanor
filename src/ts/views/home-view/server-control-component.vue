@@ -20,8 +20,8 @@
 </template>
 
 <script>
-    import Saved from '../../saved';
     import Server from '../../server';
+    import Settings from '../../settings';
 
     export default {
         data() {
@@ -54,7 +54,7 @@
 
         methods: {
             startServer() {
-                new Server(Saved.port).start().then(server => {
+                new Server(Settings.get('port')).start().then(server => {
                     this.server = server;
                 });
             },

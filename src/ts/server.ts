@@ -1,9 +1,9 @@
 import { events, flash } from './flash';
-import Saved from './saved';
 import Zip, { IZip } from './zip';
 
 import * as http from 'http';
 import * as multiparty from 'multiparty';
+import Settings from './settings';
 
 export interface IFields {
     accessToken: string[];
@@ -29,8 +29,11 @@ export default class Server {
     public start(): Promise<Server> {
         return new Promise((resolve, reject) => {
             const server = http.createServer((request, response) => {
+                const uploadDir = Settings.get('downloadDirectory');
+                if (! uploadDir) { throw new Error('Download directory is not set'); }
+
                 const form = new multiparty.Form({
-                    uploadDir: Saved.downloadDirectory,
+                    uploadDir: uploadDir.value,
                 });
 
                 form.parse(request, (error, fields: IFields, files: IFiles) => {
@@ -113,7 +116,12 @@ export default class Server {
     }
 
     public isRequestValid(accessToken: string): boolean {
-        return accessToken === Saved.accessToken;
+        const token = Settings.get('accessToken');
+        if (token) {
+            return accessToken === token.value;
+        }
+
+        return false;
     }
 
     private writeResponse(response: http.ServerResponse, code: EHttpStatus): void {

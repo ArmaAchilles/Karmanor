@@ -1,151 +1,57 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <card-component status="primary">
+            <card-component status="primary" columnClass="col-lg-12">
                 <template slot="header">
-                    <h4 class="card-title">Game Settings</h4>
+                    <h4 class="card-title">Edit Settings</h4>
                 </template>
 
-                <form>
-                    <div class="form-group">
-                        <label for="gameExecutable" @click="openFile()" class="bmd-label-floating clickable">Press to select game executable path</label>
-                        <span class="form-control clickable" id="gameExecutable" v-text="executable" @click="openFile()"></span>
+                <form @submit.prevent="save">
+                    <div class="form-group" v-for="setting in settings" :key="setting.key">
+                        <label :for="setting.key" v-text="setting.beautifiedName" />
+                        <input :id="setting.key" :name="setting.key" type="text" class="form-control" :value="setting.value">
                     </div>
 
-                    <div class="form-group">
-                        <label for="rpt" @click="openRpt()" class="bmd-label-floating clickable">Press to select where RPT files are stored</label>
-                        <span class="form-control clickable" id="rpt" v-text="rpt" @click="openRpt()"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="parameters" class="bmd-label-floating">Parameters to launch the game with</label>
-                        <input type="text" class="form-control" id="parameters" v-model="parameters">
-                    </div>
-
-                    <button class="btn btn-primary" :disabled="formDisabled([executable, rpt, parameters])" @click="saveSettings('game', {executable, rpt, parameters})">Save Settings</button>
-                </form>
-            </card-component>
-
-            <card-component status="primary">
-                <template slot="header">
-                    <h4 class="card-title">Server Settings</h4>
-                </template>
-
-                <form>
-                    <div class="form-group">
-                        <label for="port" class="bmd-label-floating">Server Port</label>
-                        <input type="text" id="port" required class="form-control" v-model="port">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="accessToken" class="bmd-label-floating">Access Token</label>
-                        <input id="accessToken" required class="form-control" type="text" v-model="accessToken">
-                    </div>
-
-                    <button class="btn btn-primary" :disabled="formDisabled([port, accessToken])" @click="saveSettings('server-settings', {port, accessToken})">Save Settings</button>
-                </form>
-            </card-component>
-
-            <card-component status="primary">
-                <template slot="header">
-                    <h4 class="card-title">Directories</h4>
-                </template>
-
-                <form>
-                    <div class="form-group">
-                        <label for="downloadDirectory" @click="openDownloadDirectory()" class="bmd-label-floating clickable">Press to select file download directory</label>
-                        <span class="form-control clickable" id="downloadDirectory" @click="openDownloadDirectory()" v-text="downloadDirectory"></span>
-                    </div>
-
-                    <button class="btn btn-primary" :disabled="formDisabled([downloadDirectory])" @click="saveSettings('directories', {downloadDirectory})">Save Settings</button>
+                    <input type="submit" ref="submit" value="Save" class="btn btn-primary btn-block">
                 </form>
             </card-component>
         </div>
     </div>
 </template>
 
-<script>
-    import Settings from '../settings';
-    import Saved from '../saved';
-    import Dialog from '../dialog';
+<script lang="ts">
+    import Vue from 'vue';
+    import * as _ from 'lodash';
+    import Settings, { ISettings } from '../settings';
 
-    export default {
+    export default Vue.extend({
         data() {
             return {
-                port: '',
-                accessToken: '',
-
-                downloadDirectory: '',
-
-                executable: '',
-                rpt: '',
-                parameters: '',
+                settings: Settings.getAll(),
             }
         },
 
-        mounted() {
-            this.port = Saved.port;
-            this.accessToken = Saved.accessToken;
-            this.downloadDirectory = Saved.downloadDirectory;
-            this.executable = Saved.game.executable;
-            this.rpt = Saved.game.rpt;
-            this.parameters = Saved.game.parameters;
-        },
-
         methods: {
-            saveSettings(key, data) {
-                Settings.save(key, data).then(isSaved => {
-                    isSaved ? flash('Settings saved!') : flash(`You didn't change anything!`, 'info');
-                }).catch(message => {
-                    flash(message, 'danger', true);
-                });
-            },
+            save(event: Event) {
+                let hasError = false;
+                let hasChange = false;
 
-            openDownloadDirectory() {
-                let directory = Dialog.openDirectory();
-
-                if (directory !== null) {
-                    this.downloadDirectory = directory;
-                }
-            },
-
-            openRpt() {
-                let directory = Dialog.openDirectory();
-
-                if (directory !== null) {
-                    this.rpt = directory;
-                }
-            },
-
-            openFile() {
-                let file = Dialog.openFile([
-                    {
-                        name: 'Arma 3 Executable',
-                        extensions: ['exe'],
+                // @ts-ignore
+                _.forEach(event.target, (element: HTMLFormElement) => {
+                    if (element.name !== (this.$refs.submit as HTMLFormElement).name && element.name !== '') {
+                        // TODO: This is an ugly mess
+                        Settings.set(element.name as keyof ISettings, element.name === 'port' ? parseInt(element.value) : element.value)
+                            // If hasChange has been already modified then we don't want to override it
+                            .then(didSave => hasChange = hasChange ? hasChange : didSave)
+                            .catch((error: Error) => { global.flash(error.message, 'danger', true); hasError = true; });
                     }
-                ]);
-
-                if (file !== null) {
-                    this.executable = file;
-                }
-            },
-
-            formDisabled(controls) {
-                let isDisabled = false;
-
-                controls.forEach(control => {
-                    isDisabled = ((control === '' || control === undefined) ? true : false);
                 });
 
-                return isDisabled;
+                // TODO: Race condition
+                if (! hasError) {
+                    hasChange ? global.flash('Saved settings!') : global.flash(`You didn't change anything!`, 'info');
+                }
             },
         },
-    }
+    });
 </script>
-
-<style scoped>
-    .clickable {
-        cursor: pointer;
-    }
-</style>
-

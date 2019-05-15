@@ -4,28 +4,36 @@ import { ChildProcess, spawn } from 'child_process';
 import { Tail } from 'tail';
 import { EBuildStatus } from './build';
 import File from './file';
-import Saved from './saved';
+import Settings from './settings';
 
 export default class Game implements IGame {
-    public executable: string;
+    public static getIGame(): IGame {
+        return {
+            executablePath: Settings.get('gameExecutablePath').value || '',
+            parameters: Settings.get('gameParameters').value || '',
+            rptDirectory: Settings.get('gameRptDirectory').value || '',
+        };
+    }
+
+    public executablePath: string;
     public parameters: string;
-    public rpt: string;
+    public rptDirectory: string;
 
     public exitCode: number = -1;
     private process?: ChildProcess;
 
     constructor(game: IGame, unpackedDirectory: string) {
-        this.executable = game.executable;
-        this.parameters = this.processArguments(unpackedDirectory);
-        this.rpt = game.rpt;
+        this.executablePath = game.executablePath;
+        this.parameters = this.processArguments(game, unpackedDirectory);
+        this.rptDirectory = game.rptDirectory;
     }
 
     get latestRpt(): string {
-        return File.getLatestFile(this.rpt);
+        return File.getLatestFile(this.rptDirectory);
     }
 
     public start() {
-        this.process = spawn(this.executable, [this.parameters]);
+        this.process = spawn(this.executablePath, [this.parameters]);
 
         this.process.on('close', exitCode => {
             this.exitCode = exitCode;
@@ -90,11 +98,11 @@ export default class Game implements IGame {
      *
      * @param unpackedDirectory Path to the directory where the ZIP was extracted.
      */
-    private processArguments(unpackedDirectory: string): string {
-        const args = Saved.game.parameters;
+    private processArguments(game: IGame, unpackedDirectory: string): string {
+        const args = game.parameters;
 
-        args.replace('${executableDirectory}', File.directoryFromFilepath(Saved.game.executable));
-        args.replace('${executableFile}', Saved.game.executable);
+        args.replace('${executableDirectory}', File.directoryFromFilepath(game.executablePath));
+        args.replace('${executableFile}', game.executablePath);
         args.replace('${unpackedDirectory}', unpackedDirectory);
 
         return args;
@@ -102,7 +110,7 @@ export default class Game implements IGame {
 }
 
 export interface IGame {
-    executable: string;
+    executablePath: string;
     parameters: string;
-    rpt: string;
+    rptDirectory: string;
 }

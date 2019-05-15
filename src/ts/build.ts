@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import File from './file';
 import { events } from './flash';
 import Game from './game';
-import Saved from './saved';
+import Settings from './settings';
 import Zip, { IZip } from './zip';
 
 export default class Build {
@@ -21,16 +21,18 @@ export default class Build {
     }
 
     public async start() {
+        const gameSettings = Game.getIGame();
+
         events.$emit('build-started', this);
 
         const unpackedDirectory =
-            await Zip.unpack(this.zip.path, File.directoryFromFilepath(Saved.game.executable));
+            await Zip.unpack(this.zip.path, File.directoryFromFilepath(gameSettings.executablePath));
 
         events.$emit('zip-extracted');
 
         Zip.remove(this.zip.path);
 
-        const game = new Game(Saved.game, unpackedDirectory);
+        const game = new Game(gameSettings, unpackedDirectory);
 
         game.start();
 
@@ -50,9 +52,13 @@ export default class Build {
     }
 
     private lastBuildStatus(): EBuildStatus | undefined {
-        const lastBuild = _.last(Saved.builds);
+        const builds = Settings.get('builds');
 
-        if (! lastBuild) { return; }
+        if (! builds) { return undefined; }
+
+        const lastBuild = _.last(builds.value);
+
+        if (! lastBuild) { return undefined; }
 
         return lastBuild.status;
     }
@@ -81,10 +87,13 @@ export default class Build {
         events.$emit('build-finished', this);
     }
 
-    private save() {
-        const builds = Saved.builds;
-        builds.push(this);
-        Saved.builds = builds;
+    private async save() {
+        const builds = Settings.get('builds');
+
+        if (builds.value) {
+            builds.value.push(this);
+            await Settings.set('builds', builds.value);
+        }
     }
 }
 

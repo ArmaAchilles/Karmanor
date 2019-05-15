@@ -46,7 +46,7 @@
 
 <script>
     import { ipcRenderer } from 'electron';
-    import Saved from '../../saved';
+    import Settings from '../../settings';
 
     export default {
         data() {
@@ -71,13 +71,13 @@
                     this.incrementChartData(this.chartConnections);
                 }
                 else if (chartToIncrement === 'chartRequests') {
-                    this.incrementChartData (this.chartRequests);
+                    this.incrementChartData(this.chartRequests);
                 }
             });
         },
 
         mounted() {
-            let charts = Saved.chartHome;
+            let charts = Settings.get('chartsHome');
 
             if (! _.isEqual(charts, {})) {
                 this.chartConnections = charts.connections;
