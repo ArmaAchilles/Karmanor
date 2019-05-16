@@ -7,6 +7,9 @@ jobs:
       - bash: npm ci
         displayName: 'Install dependencies'
 
+      - bash: npm i codecov -g
+        displayName: 'Install codecov globally'
+
       - bash: npm run development
         displayName: 'Compile Karmanor'
 
@@ -15,6 +18,9 @@ jobs:
 
       - bash: npm run test
         displayName: 'Test Karmanor'
+
+      - bash: codecov -t $(codecovToken)
+        displayName: 'Upload to codecov'
 
   # - job: Build
   #   pool:
