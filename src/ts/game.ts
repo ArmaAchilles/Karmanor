@@ -99,11 +99,11 @@ export default class Game implements IGame {
      * @param unpackedDirectory Path to the directory where the ZIP was extracted.
      */
     private processArguments(game: IGame, unpackedDirectory: string): string {
-        const args = game.parameters;
+        let args = game.parameters;
 
-        args.replace('${executableDirectory}', File.directoryFromFilepath(game.executablePath));
-        args.replace('${executableFile}', game.executablePath);
-        args.replace('${unpackedDirectory}', unpackedDirectory);
+        args = args.replace('${executableDirectory}', File.directoryFromFilepath(game.executablePath));
+        args = args.replace('${executableFile}', game.executablePath);
+        args = args.replace('${unpackedDirectory}', unpackedDirectory);
 
         return args;
     }
