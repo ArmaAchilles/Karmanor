@@ -6,6 +6,12 @@ import Build from './build';
 import Faker from './faker';
 
 export default class Settings {
+    /**
+     * Returns `ISetting` for the given key from saved settings. Throws error if setting not found.
+     * @param key Key from `ISettings` interface.
+     * @returns `ISetting` for that given key.
+     * @throws Error if key not found.
+     */
     public static get<T extends keyof ISettings, K extends ISettings[T]>(key: T): K {
         const value = this.getValue(key);
 
@@ -16,22 +22,29 @@ export default class Settings {
         throw new Error(`${key} is not defined.`);
     }
 
+    /**
+     * Returns all keys from saved settings.
+     * @returns Array of `ISetting`.
+     */
     public static getAll(): ISetting<any>[] {
         const settings = this.getFile();
 
         const filtered: ISetting<any>[] = [];
 
         _.forEach(settings, setting => {
-            if (setting) {
-                if (setting.editable) {
-                    filtered.push(setting);
-                }
+            if (setting.editable) {
+                filtered.push(setting);
             }
         });
 
         return filtered;
     }
 
+    /**
+     * Returns true if key exists in the saved JSON or false if it does not exist.
+     * @param key Key from `ISettings` interface.
+     * @returns Boolean if key is present.
+     */
     public static has<T extends keyof ISettings>(key: T): boolean  {
         const setting = this.getValue(key);
 
@@ -42,6 +55,12 @@ export default class Settings {
         return false;
     }
 
+    /**
+     * Saves the selected setting's value to the file system in a JSON file.
+     * @param key Key of `ISettings` interface.
+     * @param value Value to set the setting to. Only allowed types are the ones from the given key.
+     * @returns In `.then` returns boolean if setting was saved to the file system, in `.catch` returns error.
+     */
     public static set<T extends keyof ISettings, K extends ISettings[T]['value']>(key: T, value: K): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const old = this.get(key);
@@ -64,10 +83,35 @@ export default class Settings {
         });
     }
 
-    private static getFilePath(): string {
-        const userDataPath = os.platform() === 'win32' ? path.join('%APPDATA%', 'karmanor') :
-            (os.platform() === 'linux' ? path.join(os.homedir(), '.config', 'karmanor') :
-                path.join(os.homedir(), 'Library', 'Application Support', 'karmanor'));
+    /**
+     * Removes the setting JSON file if present.
+     */
+    public static removeFile(): void {
+        if (fs.existsSync(this.getFilePath())) {
+            fs.unlinkSync(this.getFilePath());
+        }
+    }
+
+    /**
+     * Gets the path to the `settings.json` file (inclusive). Dependent on the OS.
+     */
+    public static getFilePath(): string {
+        let userDataPath = '';
+
+        switch (os.platform()) {
+            case 'win32':
+                userDataPath = path.join('%APPDATA%', 'karmanor');
+                break;
+            case 'darwin':
+                userDataPath = path.join(os.homedir(), 'Library', 'Application Support', 'karmanor');
+                break;
+            case 'linux':
+                userDataPath = path.join(os.homedir(), '.config', 'karmanor');
+                break;
+
+            default:
+                throw new Error('Your operating system is not supported.');
+        }
 
         return path.join(userDataPath, 'settings.json');
     }
