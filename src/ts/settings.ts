@@ -55,7 +55,6 @@ export default class Settings {
                 if (_.isEqual(this.get(key).value, value)) {
                     resolve(true);
                 } else {
-                    console.log(key, value, old, this.get(key), _.isEqual(this.get(key), value));
                     reject(new Error(`Failed to update settings for element ${old.beautifiedName}`));
                 }
             } else {
