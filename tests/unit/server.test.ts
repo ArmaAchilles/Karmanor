@@ -1,7 +1,5 @@
-import * as electron from 'electron';
 import * as fs from 'fs-extra';
 import * as http from 'http';
-import * as os from 'os';
 
 import axios from 'axios';
 import FormData from 'form-data';
@@ -10,7 +8,6 @@ import Faker from '../../src/ts/faker';
 import { events } from '../../src/ts/flash';
 import Server, { EHttpStatus } from '../../src/ts/server';
 import Settings from '../../src/ts/settings';
-import { join } from 'path';
 
 const address = 'http://127.0.0.1:2566';
 let createdServer: Server;
@@ -127,6 +124,19 @@ test('Request validation sucessfully works with a correct access token', () => {
 
 test('Request validation fails when a non-valid access token is passed', () => {
     expect(createdServer.isRequestValid('someRandomThing1234')).toBe(false);
+});
+
+test('Request validation always fails if access token is not set', async () => {
+    jest.spyOn(Settings, 'get').mockReturnValue({
+        beautifiedName: 'Access Token',
+        editable: true,
+        key: 'accessToken',
+        value: undefined,
+    });
+
+    expect(Settings.get('accessToken').value).toBe(undefined);
+
+    expect(createdServer.isRequestValid(undefined)).toBe(false);
 });
 
 describe('The server emits different status codes for requests', () => {

@@ -30,7 +30,6 @@ export default class Server {
         return new Promise((resolve, reject) => {
             const server = http.createServer((request, response) => {
                 const uploadDir = Settings.get('downloadDirectory');
-                if (! uploadDir) { throw new Error('Download directory is not set'); }
 
                 const form = new multiparty.Form({
                     uploadDir: uploadDir.value,
@@ -116,9 +115,9 @@ export default class Server {
     }
 
     public isRequestValid(accessToken: string): boolean {
-        const token = Settings.get('accessToken');
+        const token = Settings.get('accessToken').value;
         if (token) {
-            return accessToken === token.value;
+            return accessToken === token;
         }
 
         return false;
