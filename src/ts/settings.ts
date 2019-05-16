@@ -90,7 +90,7 @@ export default class Settings {
         const downloadDirectory = path.join(this.getFilePath(), '..', 'ServerDownloads');
 
         if (! fs.existsSync(downloadDirectory)) {
-            fs.mkdirSync(downloadDirectory);
+            fs.mkdirsSync(downloadDirectory);
         }
 
         const data: ISettings = {
