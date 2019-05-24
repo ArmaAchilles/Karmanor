@@ -35,6 +35,14 @@ test('An RPT file can be created and it exists', () => {
     expect(fs.lstatSync(rptPath).isFile()).toBe(true);
 });
 
+test('An RPT file can be created in a custom directory', () => {
+    const tempDir = Faker.createTempDirectory();
+    const rptPath = Faker.createRpt(tempDir);
+
+    expect(fs.existsSync(rptPath)).toBe(true);
+    expect(rptPath.includes(tempDir)).toBe(true);
+});
+
 test('It is possible to write to a created RPT file', done => {
     const rpt = Faker.createRpt();
 
