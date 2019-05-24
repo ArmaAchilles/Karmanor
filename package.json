@@ -53,7 +53,7 @@
     "axios": "^0.18.0",
     "babel-plugin-istanbul": "^5.1.4",
     "bootstrap": "^4.3.1",
-    "bootstrap-material-design": "^4.1.1",
+    "bootstrap-material-design": "^4.1.2",
     "chartist": "^0.11.0",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
