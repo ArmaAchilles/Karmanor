@@ -29,5 +29,7 @@ module.exports = {
 
     testMatch: [
         '**/tests/**/*.test.ts',
-    ]
+    ],
+
+    globalTeardown: '<rootDir>/tests/teardown.ts',
 };
