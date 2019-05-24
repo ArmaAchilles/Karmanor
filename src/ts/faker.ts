@@ -7,10 +7,12 @@ import * as path from 'path';
 const JSZip = require('jszip');
 
 export default class Faker {
-    public createRpt(): string {
+    public createRpt(directory?: string): string {
         const date = new Date();
 
-        const directory = this.createTempDirectory();
+        if (! directory) {
+            directory = this.createTempDirectory();
+        }
 
         const yearMonthDay = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
         const hourMinutesDay = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
