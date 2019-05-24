@@ -8,8 +8,6 @@ import File from '../../src/ts/file';
 
 import Faker from '../../src/ts/faker';
 
-const faker = new Faker();
-
 afterAll(() => {
     // Empty temp dir of test stuff
     const allDirs = File.getAllDirectories(tmpdir());
@@ -22,7 +20,7 @@ afterAll(() => {
 });
 
 test('A temp dir can be created and it exists', () => {
-    const tempDir = faker.createTempDirectory();
+    const tempDir = Faker.createTempDirectory();
 
     expect(tempDir).toContain('karmanor');
 
@@ -31,14 +29,14 @@ test('A temp dir can be created and it exists', () => {
 });
 
 test('An RPT file can be created and it exists', () => {
-    const rptPath = faker.createRpt();
+    const rptPath = Faker.createRpt();
 
     expect(fs.existsSync(rptPath)).toBe(true);
     expect(fs.lstatSync(rptPath).isFile()).toBe(true);
 });
 
 test('It is possible to write to a created RPT file', done => {
-    const rpt = faker.createRpt();
+    const rpt = Faker.createRpt();
 
     const data = fs.readFileSync(rpt);
 
@@ -61,11 +59,11 @@ test('It is possible to write to a created RPT file', done => {
         }
     });
 
-    faker.writeToRpt(rpt, timesToWrite, 0.05);
+    Faker.writeToRpt(rpt, timesToWrite, 0.05);
 });
 
 test('A RPT can be created with its default values', done => {
-    const rpt = faker.createRpt();
+    const rpt = Faker.createRpt();
 
     const tail = new Tail(rpt);
 
@@ -84,17 +82,17 @@ test('A RPT can be created with its default values', done => {
         }
     });
 
-    faker.writeToRpt(rpt);
+    Faker.writeToRpt(rpt);
 });
 
 test('Slug returns an actual slug separated by dashes', () => {
-    const slug = faker.slug();
+    const slug = Faker.slug();
 
     expect(slug.split('-').length).toBeGreaterThan(1);
 });
 
 test('A fake file can be created, it exists and it has some content', () => {
-    const filepath = faker.file('txt');
+    const filepath = Faker.file('txt');
 
     // That it was created in the temp dir
     expect(filepath).toContain('karmanor');
@@ -112,7 +110,7 @@ test('A fake file can be created in a custom directory', () => {
 
     fse.mkdirpSync(dir);
 
-    const filepath = faker.file('txt', dir);
+    const filepath = Faker.file('txt', dir);
 
     expect(filepath).toContain(dir);
 
@@ -121,7 +119,7 @@ test('A fake file can be created in a custom directory', () => {
 });
 
 test('A fake zip file can be created, it exists and it has some content', async () => {
-    const zip = await faker.zip();
+    const zip = await Faker.zip();
 
     // That it was created in the temp dir
     expect(zip).toContain('karmanor');
@@ -139,7 +137,7 @@ test('A fake zip file can be created in a custom directory', async () => {
 
     fse.mkdirpSync(dir);
 
-    const filepath = await faker.zip(dir);
+    const filepath = await Faker.zip(dir);
 
     expect(filepath).toContain(dir);
 

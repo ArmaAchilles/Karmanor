@@ -7,7 +7,7 @@ import * as path from 'path';
 const JSZip = require('jszip');
 
 export default class Faker {
-    public createRpt(directory?: string): string {
+    public static createRpt(directory?: string): string {
         const date = new Date();
 
         if (! directory) {
@@ -28,7 +28,7 @@ export default class Faker {
         return rptPath;
     }
 
-    public createTempDirectory(): string {
+    public static createTempDirectory(): string {
         const tempDirectory = fs.mkdtempSync('karmanor');
 
         const directory = path.join(os.tmpdir(), tempDirectory);
@@ -38,7 +38,7 @@ export default class Faker {
         return directory;
     }
 
-    public file(extension: string, whereTo?: string): string {
+    public static file(extension: string, whereTo?: string): string {
         const directory = this.createTempDirectory();
 
         const fileName = `${this.slug()}.${extension}`;
@@ -58,11 +58,11 @@ export default class Faker {
         return filePath;
     }
 
-    public slug(): string {
+    public static slug(): string {
         return faker.lorem.slug();
     }
 
-    public writeToRpt(filepath: string, timesToWrite = 5, delayInSeconds?: number) {
+    public static writeToRpt(filepath: string, timesToWrite = 5, delayInSeconds?: number) {
         let writtenTimes = 0;
 
         while (writtenTimes < timesToWrite) {
@@ -77,7 +77,7 @@ export default class Faker {
         }
     }
 
-    public zip(whereTo?: string): Promise<string> {
+    public static zip(whereTo?: string): Promise<string> {
         return new Promise(resolve => {
             const zip = new JSZip();
 
@@ -95,7 +95,7 @@ export default class Faker {
         });
     }
 
-    private writeRpt(filepath: string, data: string) {
+    private static writeRpt(filepath: string, data: string) {
         fs.appendFileSync(filepath, `${data}\n`);
     }
 }

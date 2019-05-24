@@ -154,7 +154,7 @@ describe('The server emits different status codes for requests', () => {
     test('Passing no access token with zip results in bad request and zip is removed from disk', async done => {
         await createdServer.start();
 
-        const zipPath = await new Faker().zip();
+        const zipPath = await Faker.zip();
         expect(fs.existsSync(zipPath)).toBe(true);
 
         const form = new FormData();
@@ -193,7 +193,7 @@ describe('The server emits different status codes for requests', () => {
 
         const form = new FormData();
         form.append('accessToken', 'someRandomToken1234');
-        form.append('zip', fs.createReadStream(await new Faker().zip()));
+        form.append('zip', fs.createReadStream(await Faker.zip()));
 
         axios.post(address, form, {
             headers: form.getHeaders(),
@@ -212,7 +212,7 @@ describe('The server emits different status codes for requests', () => {
 
         const form = new FormData();
         form.append('accessToken', 'aToken');
-        form.append('zip', fs.createReadStream(await new Faker().zip()));
+        form.append('zip', fs.createReadStream(await Faker.zip()));
 
         axios.post(address, form, {
             headers: form.getHeaders(),

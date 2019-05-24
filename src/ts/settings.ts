@@ -139,7 +139,7 @@ export default class Settings {
                 beautifiedName: 'Access Token',
                 editable: true,
                 key: 'accessToken',
-                value: new Faker().slug(),
+                value: Faker.slug(),
             },
             builds: {
                 beautifiedName: 'Builds',
