@@ -106,4 +106,77 @@ describe('Settings.removeFile()', () => {
 
         expect(fs.existsSync(jsonPath)).toBe(false);
     });
+
+    test('If settings.json does not exist then it does nothing', () => {
+        const jsonPath = Settings.getFilePath();
+
+        // Initalize if the json file doesn't exist
+        expect(Settings.get('accessToken').value).toBeDefined();
+
+        expect(fs.existsSync(jsonPath)).toBe(true);
+
+        Settings.removeFile();
+
+        expect(fs.existsSync(jsonPath)).toBe(false);
+
+        Settings.removeFile();
+
+        expect(fs.existsSync(jsonPath)).toBe(false);
+    });
+});
+
+describe('Settings.getValue()', () => {
+    test('Returns undefined if getFile() returns undefined', () => {
+        // @ts-ignore It's a private method
+        jest.spyOn(Settings, 'getFile').mockReturnValueOnce(undefined);
+
+        expect(() => Settings.get('accessToken')).toThrowError();
+    });
+});
+
+describe('Settings.write()', () => {
+    test('Writes to empty object if getFile() returns undefined', () => {
+        // @ts-ignore It's a private method
+        jest.spyOn(Settings, 'getFile').mockReturnValueOnce(undefined);
+
+        // @ts-ignore Private method
+        Settings.write('accessToken', {
+            beautifiedName: 'Access Token',
+            editable: true,
+            key: 'accessToken',
+            value: 'something',
+        });
+
+        expect(Settings.get('accessToken').value).toBe('something');
+    });
+});
+
+describe('Settings.initalize()', () => {
+    test(`Path is created if download directory doesn't exist`, () => {
+        const downloadPath = path.join(Settings.getFilePath(), '..', 'ServerDownloads');
+
+        if (fs.existsSync(downloadPath)) {
+            fs.removeSync(downloadPath);
+        }
+
+        expect(fs.existsSync(downloadPath)).toBe(false);
+
+        // @ts-ignore Private method
+        Settings.initalize();
+
+        expect(fs.existsSync(downloadPath)).toBe(true);
+    });
+});
+
+describe('Settings.getFile()', () => {
+    test('If settings.json contains {} then it initalizes', () => {
+        // Init all directories
+        Settings.get('accessToken');
+
+        fs.writeFileSync(Settings.getFilePath(), '{}');
+
+        expect(fs.readFileSync(Settings.getFilePath()).toString()).toBe('{}');
+
+        expect(Settings.get('accessToken').value).toBeDefined();
+    });
 });

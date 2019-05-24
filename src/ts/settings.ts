@@ -108,9 +108,6 @@ export default class Settings {
             case 'linux':
                 userDataPath = path.join(os.homedir(), '.config', 'karmanor');
                 break;
-
-            default:
-                throw new Error('Your operating system is not supported.');
         }
 
         return path.join(userDataPath, 'settings.json');
