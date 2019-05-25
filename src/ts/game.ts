@@ -20,7 +20,7 @@ export default class Game implements IGame {
     public rptDirectory: string;
 
     public exitCode: number = -1;
-    private process?: ChildProcess;
+    public process?: ChildProcess;
 
     constructor(game: IGame, unpackedDirectory: string) {
         this.executablePath = game.executablePath;
@@ -33,18 +33,20 @@ export default class Game implements IGame {
     }
 
     public start() {
-        this.process = spawn(this.executablePath, [this.parameters]);
-
-        this.process.on('close', exitCode => {
-            this.exitCode = exitCode;
-
-            this.process = undefined;
+        this.process = spawn(this.executablePath, [this.parameters], {
+            shell: true,
         });
     }
 
     public close() {
         // If process has already exited
         if (this.exitCode !== -1 || ! this.process) { return; }
+
+        this.process.on('close', exitCode => {
+            this.exitCode = exitCode;
+
+            this.process = undefined;
+        });
 
         this.process.kill();
     }

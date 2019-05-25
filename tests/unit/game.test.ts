@@ -1,4 +1,7 @@
 import * as fs from 'fs-extra';
+import * as path from 'path';
+
+import psList from 'ps-list';
 
 import Faker from '../../src/ts/faker';
 import File from '../../src/ts/file';
@@ -93,5 +96,26 @@ describe('Game.latestRpt', () => {
         expect(File.getLatestFile(File.directoryFromFilepath(rpts[1]))).toBe(rpts[0]);
 
         mock.mockRestore();
+    });
+});
+
+describe('Game.start()', () => {
+    test('Game can be started and stopped', async () => {
+        const iGame = Game.getIGame();
+        iGame.executablePath = `node ${path.join(__dirname, '..', 'mocks', 'game.js')}`;
+
+        const game = new Game(iGame, 'some/dir');
+
+        game.start();
+
+        let ps = await psList();
+
+        expect(ps.some(process => process.pid === game.process.pid)).toBe(true);
+
+        game.close();
+
+        ps = await psList();
+
+        expect(ps.some(process => process.pid === game.process.pid)).toBe(false);
     });
 });
