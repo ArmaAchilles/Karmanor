@@ -110,12 +110,42 @@ describe('Game.start()', () => {
 
         let ps = await psList();
 
-        expect(ps.some(process => process.pid === game.process.pid)).toBe(true);
+        const pid = game.process.pid;
 
-        game.close();
+        expect(ps.some(process => process.pid === pid)).toBe(true);
+
+        await game.close();
 
         ps = await psList();
 
-        expect(ps.some(process => process.pid === game.process.pid)).toBe(false);
+        expect(ps.some(process => process.pid === pid)).toBe(false);
+    });
+});
+
+describe('Game.close()', () => {
+    test('Variable process is undefined', async () => {
+        const iGame = Game.getIGame();
+        iGame.executablePath = `node ${path.join(__dirname, '..', 'mocks', 'game.js')}`;
+
+        const game = new Game(iGame, 'some/dir');
+
+        const closed = await game.close();
+
+        expect(closed).toBe(undefined);
+        expect(game.exitCode).toBe(-1);
+    });
+
+    test('Exit code is not -1', async () => {
+        const iGame = Game.getIGame();
+        iGame.executablePath = `node ${path.join(__dirname, '..', 'mocks', 'game.js')}`;
+
+        const game = new Game(iGame, 'some/dir');
+
+        game.exitCode = 1;
+
+        const closed = await game.close();
+
+        expect(closed).toBe(undefined);
+        expect(game.exitCode).toBe(1);
     });
 });

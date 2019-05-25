@@ -6,6 +6,8 @@ import { EBuildStatus } from './build';
 import File from './file';
 import Settings from './settings';
 
+const kill = require('tree-kill');
+
 export default class Game implements IGame {
     public static getIGame(): IGame {
         return {
@@ -38,17 +40,22 @@ export default class Game implements IGame {
         });
     }
 
-    public close() {
-        // If process has already exited
-        if (this.exitCode !== -1 || ! this.process) { return; }
+    public close(): Promise<undefined> {
+        return new Promise(resolve => {
+            // If process has already exited
+            // tslint:disable-next-line: newline-before-return
+            if (this.exitCode !== -1 || ! this.process) { resolve(); return; }
 
-        this.process.on('close', exitCode => {
-            this.exitCode = exitCode;
+            this.process.on('close', exitCode => {
+                this.exitCode = exitCode;
 
-            this.process = undefined;
+                this.process = undefined;
+
+                resolve();
+            });
+
+            kill(this.process.pid);
         });
-
-        this.process.kill();
     }
 
     public readRpt(): Promise<EBuildStatus> {
