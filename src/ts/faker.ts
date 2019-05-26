@@ -62,18 +62,15 @@ export default class Faker {
         return faker.lorem.slug();
     }
 
-    public static writeToRpt(filepath: string, timesToWrite = 5, delayInSeconds?: number) {
+    public static writeToRpt(filepath: string, timesToWrite = 5, delayInSeconds: number = 1) {
         let writtenTimes = 0;
 
         while (writtenTimes < timesToWrite) {
             writtenTimes++;
 
-            // 1-2 seconds
-            const timeToWait = _.random(1, 3) * 1000;
-
             setTimeout(() => {
-                this.writeRpt(filepath, faker.lorem.sentence());
-            }, delayInSeconds ? delayInSeconds * 1000 : timeToWait);
+                File.appendToFile(filepath, faker.lorem.sentence());
+            }, delayInSeconds * 1000);
         }
     }
 
