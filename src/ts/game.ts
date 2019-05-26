@@ -83,16 +83,14 @@ export default class Game implements IGame {
                 }
             });
 
-            // 15 minutes
-            const timeToWait = 15 * 1000 * 60;
+            // 10 minutes
+            const timeToWait = 10 * 1000 * 60;
 
-            // 15 minutes timeout if something went wrong
+            // 10 minutes timeout if something went wrong
             setTimeout(() => {
-                if (tail !== undefined) {
-                    tail.unwatch();
+                tail.unwatch();
 
-                    resolve(EBuildStatus.broken);
-                }
+                resolve(EBuildStatus.broken);
             }, timeToWait);
         });
     }

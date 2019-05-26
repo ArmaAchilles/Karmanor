@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import psList from 'ps-list';
 
+import { EBuildStatus } from '../../src/ts/build';
 import Faker from '../../src/ts/faker';
 import File from '../../src/ts/file';
 import Game from '../../src/ts/game';
@@ -147,5 +148,83 @@ describe('Game.close()', () => {
 
         expect(closed).toBe(undefined);
         expect(game.exitCode).toBe(1);
+    });
+});
+
+describe('Game.readRpt()', () => {
+    test('Build fails if it found "Karmanor: Build Failed." message', done => {
+        const rptDir = Faker.createTempDirectory();
+        const rpt = Faker.createRpt(rptDir);
+
+        const iGame = Game.getIGame();
+        iGame.rptDirectory = rptDir;
+
+        const game = new Game(iGame, 'some/dir');
+
+        jest.useFakeTimers();
+
+        game.readRpt().then(status => {
+            expect(status).toBe(EBuildStatus.failed);
+            done();
+        });
+
+        File.appendToFile(rpt, '11:48:57 Karmanor: Build failed.');
+    });
+
+    test('Build passes if it found "Karmanor: Build passed." message', done => {
+        const rptDir = Faker.createTempDirectory();
+        const rpt = Faker.createRpt(rptDir);
+
+        const iGame = Game.getIGame();
+        iGame.rptDirectory = rptDir;
+
+        const game = new Game(iGame, 'some/dir');
+
+        jest.useFakeTimers();
+
+        game.readRpt().then(status => {
+            expect(status).toBe(EBuildStatus.passed);
+            done();
+        });
+
+        File.appendToFile(rpt, '11:48:57 Karmanor: Build passed.');
+    });
+
+    test('Build errors if it found "Shutdown normally" message', done => {
+        const rptDir = Faker.createTempDirectory();
+        const rpt = Faker.createRpt(rptDir);
+
+        const iGame = Game.getIGame();
+        iGame.rptDirectory = rptDir;
+
+        const game = new Game(iGame, 'some/dir');
+
+        jest.useFakeTimers();
+
+        game.readRpt().then(status => {
+            expect(status).toBe(EBuildStatus.broken);
+            done();
+        });
+
+        File.appendToFile(rpt, 'Shutdown normally');
+    });
+
+    test('No message and timeout has elapsed, build errors', done => {
+        const rptDir = Faker.createTempDirectory();
+        Faker.createRpt(rptDir);
+
+        const iGame = Game.getIGame();
+        iGame.rptDirectory = rptDir;
+
+        const game = new Game(iGame, 'some/dir');
+
+        jest.useFakeTimers();
+
+        game.readRpt().then(status => {
+            expect(status).toBe(EBuildStatus.broken);
+            done();
+        });
+
+        jest.runAllTimers();
     });
 });
