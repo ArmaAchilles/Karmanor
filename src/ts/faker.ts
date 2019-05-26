@@ -29,13 +29,9 @@ export default class Faker {
     }
 
     public static createTempDirectory(): string {
-        const tempDirectory = fs.mkdtempSync('karmanor');
+        const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'karmanor'));
 
-        const directory = path.join(os.tmpdir(), tempDirectory);
-
-        fs.moveSync(tempDirectory, directory);
-
-        return directory;
+        return tempDirectory;
     }
 
     public static file(extension: string, whereTo?: string): string {
