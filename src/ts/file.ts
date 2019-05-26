@@ -42,4 +42,8 @@ export default class File {
     public static getAllDirectories(directory: string): string[] {
         return fs.readdirSync(directory).map(name => path.join(directory, name)).filter(this.isDirectory);
     }
+
+    public static appendToFile(filepath: string, data: string) {
+        fs.appendFileSync(filepath, `${data}\n`);
+    }
 }

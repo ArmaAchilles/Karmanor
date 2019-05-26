@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 import * as os from 'os';
 import * as path from 'path';
 
+import File from './file';
+
 const JSZip = require('jszip');
 
 export default class Faker {
@@ -86,9 +88,5 @@ export default class Faker {
                     resolve(zipPath);
                 });
         });
-    }
-
-    private static writeRpt(filepath: string, data: string) {
-        fs.appendFileSync(filepath, `${data}\n`);
     }
 }
