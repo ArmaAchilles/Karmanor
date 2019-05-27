@@ -1,4 +1,5 @@
 import * as fs from 'fs-extra';
+import * as path from 'path';
 
 import Faker from '../../src/ts/faker';
 import File from '../../src/ts/file';
@@ -25,12 +26,12 @@ describe('Zip.unpack()', () => {
 
         expect(File.filenameWithoutExtension(zip)).toBe('output');
 
-        const path = await Zip.unpack(zip, extractDir);
+        const zipUnpacked = await Zip.unpack(zip, extractDir);
 
-        expect(path).toBe(Zip.unpackDirectory(zip, extractDir));
+        expect(zipUnpacked).toBe(Zip.unpackDirectory(zip, extractDir));
 
-        expect(fs.existsSync(path)).toBe(true);
-        expect(File.isDirectory(path)).toBe(true);
+        expect(fs.existsSync(zipUnpacked)).toBe(true);
+        expect(File.isDirectory(zipUnpacked)).toBe(true);
     });
 
     test('If zip file fails to extract it rejects the Promise', async done => {
@@ -45,6 +46,6 @@ describe('Zip.unpackDirectory()', () => {
     test('Returns an unpacked directory', async () => {
         const zip = await Faker.zip();
 
-        expect(Zip.unpackDirectory(zip, '/some/dir')).toBe('/some/dir/output');
+        expect(Zip.unpackDirectory(zip, path.join('some', 'dir'))).toBe(path.join('some', 'dir', 'output'));
     });
 });
