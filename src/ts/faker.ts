@@ -9,7 +9,7 @@ import File from './file';
 const JSZip = require('jszip');
 
 export default class Faker {
-    public static createRpt(directory?: string): string {
+    public static createRpt(directory?: string, suffix?: string): string {
         const date = new Date();
 
         if (! directory) {
@@ -18,7 +18,7 @@ export default class Faker {
 
         const yearMonthDay = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
         const hourMinutesDay = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
-        const rptName = `arma3_x64_${yearMonthDay}_${hourMinutesDay}.rpt`;
+        const rptName = `arma3_x64_${yearMonthDay}_${hourMinutesDay}${suffix}.rpt`;
 
         const rptPath = path.join(directory, rptName);
 

@@ -155,7 +155,7 @@ describe('Game.readRpt()', () => {
     test('Build fails if it found "Karmanor: Build Failed." message', done => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
-        const rpt = Faker.createRpt(rptDir);
+        const rpt = Faker.createRpt(rptDir, '_1');
 
         const iGame = Game.getIGame();
         iGame.rptDirectory = rptDir;
@@ -175,7 +175,7 @@ describe('Game.readRpt()', () => {
     test('Build passes if it found "Karmanor: Build passed." message', done => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
-        const rpt = Faker.createRpt(rptDir);
+        const rpt = Faker.createRpt(rptDir, '_2');
 
         const iGame = Game.getIGame();
         iGame.rptDirectory = rptDir;
@@ -195,7 +195,7 @@ describe('Game.readRpt()', () => {
     test('Build errors if it found "Shutdown normally" message', done => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
-        const rpt = Faker.createRpt(rptDir);
+        const rpt = Faker.createRpt(rptDir, '_3');
 
         const iGame = Game.getIGame();
         iGame.rptDirectory = rptDir;
@@ -215,7 +215,7 @@ describe('Game.readRpt()', () => {
     test('No message and timeout has elapsed, build errors', done => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
-        Faker.createRpt(rptDir);
+        Faker.createRpt(rptDir, '_4');
 
         const iGame = Game.getIGame();
         iGame.rptDirectory = rptDir;
