@@ -5,7 +5,6 @@ import { Tail } from 'tail';
 import { EBuildStatus } from './build';
 import File from './file';
 import Settings from './settings';
-import { reject } from 'q';
 
 const kill = require('tree-kill');
 
@@ -60,7 +59,7 @@ export default class Game implements IGame {
     }
 
     public readRpt(): Promise<EBuildStatus> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const tail = new Tail(this.latestRpt);
 
             tail.on('error', error => reject(error));
