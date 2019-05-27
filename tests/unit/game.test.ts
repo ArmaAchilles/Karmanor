@@ -152,6 +152,13 @@ describe('Game.close()', () => {
 });
 
 describe('Game.readRpt()', () => {
+    afterAll(() => {
+        const rptDir = path.join(__dirname, '..', 'rpts');
+        if (fs.existsSync(rptDir)) {
+            fs.removeSync(rptDir);
+        }
+    });
+
     test('Build fails if it found "Karmanor: Build Failed." message', done => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
@@ -164,10 +171,12 @@ describe('Game.readRpt()', () => {
 
         jest.useFakeTimers();
 
-        game.readRpt().then(status => {
+        game.readRpt(rpt).then(status => {
             expect(status).toBe(EBuildStatus.failed);
             done();
         });
+
+        jest.clearAllTimers();
 
         File.appendToFile(rpt, '11:48:57 Karmanor: Build failed.');
     });
@@ -184,10 +193,12 @@ describe('Game.readRpt()', () => {
 
         jest.useFakeTimers();
 
-        game.readRpt().then(status => {
+        game.readRpt(rpt).then(status => {
             expect(status).toBe(EBuildStatus.passed);
             done();
         });
+
+        jest.clearAllTimers();
 
         File.appendToFile(rpt, '11:48:57 Karmanor: Build passed.');
     });
@@ -196,7 +207,6 @@ describe('Game.readRpt()', () => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
         const rpt = Faker.createRpt(rptDir, '_3');
-
         const iGame = Game.getIGame();
         iGame.rptDirectory = rptDir;
 
@@ -204,10 +214,12 @@ describe('Game.readRpt()', () => {
 
         jest.useFakeTimers();
 
-        game.readRpt().then(status => {
+        game.readRpt(rpt).then(status => {
             expect(status).toBe(EBuildStatus.broken);
             done();
         });
+
+        jest.clearAllTimers();
 
         File.appendToFile(rpt, 'Shutdown normally');
     });
@@ -215,7 +227,7 @@ describe('Game.readRpt()', () => {
     test('No message and timeout has elapsed, build errors', done => {
         const rptDir = path.join(__dirname, '..', 'rpts');
         fs.mkdirsSync(rptDir);
-        Faker.createRpt(rptDir, '_4');
+        const rpt = Faker.createRpt(rptDir, '_4');
 
         const iGame = Game.getIGame();
         iGame.rptDirectory = rptDir;
@@ -224,7 +236,7 @@ describe('Game.readRpt()', () => {
 
         jest.useFakeTimers();
 
-        game.readRpt().then(status => {
+        game.readRpt(rpt).then(status => {
             expect(status).toBe(EBuildStatus.broken);
             done();
         });

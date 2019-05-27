@@ -1,3 +1,4 @@
+import * as lineReader from 'line-reader';
 import * as _ from 'lodash';
 
 import { ChildProcess, spawn } from 'child_process';
@@ -58,28 +59,26 @@ export default class Game implements IGame {
         });
     }
 
-    public readRpt(): Promise<EBuildStatus> {
+    public readRpt(rptFilepath: string): Promise<EBuildStatus> {
         return new Promise(resolve => {
-            const tail = new Tail(this.latestRpt);
-
-            tail.on('line', text => {
-                if (text.includes('Karmanor: Build failed.')) {
-                    tail.unwatch();
-
+            lineReader.eachLine(rptFilepath, line => {
+                if (line.includes('Karmanor: Build failed.')) {
                     resolve(EBuildStatus.failed);
+
+                    return false;
                 }
 
-                if (text.includes('Karmanor: Build passed.')) {
-                    tail.unwatch();
-
+                if (line.includes('Karmanor: Build passed.')) {
                     resolve(EBuildStatus.passed);
+
+                    return false;
                 }
 
                 // Arma 3 closes
-                if (text.includes('Shutdown normally')) {
-                    tail.unwatch();
-
+                if (line.includes('Shutdown normally')) {
                     resolve(EBuildStatus.broken);
+
+                    return false;
                 }
             });
 
@@ -88,8 +87,6 @@ export default class Game implements IGame {
 
             // 10 minutes timeout if something went wrong
             setTimeout(() => {
-                tail.unwatch();
-
                 resolve(EBuildStatus.broken);
             }, timeToWait);
         });
