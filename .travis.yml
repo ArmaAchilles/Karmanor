@@ -8,7 +8,7 @@ os:
   - osx
 
 before_script:
-- npm ci
+- npm i
 - npm i codecov -g
 - npm run dev
 
