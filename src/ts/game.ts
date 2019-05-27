@@ -2,7 +2,6 @@ import * as lineReader from 'line-reader';
 import * as _ from 'lodash';
 
 import { ChildProcess, spawn } from 'child_process';
-import { Tail } from 'tail';
 import { EBuildStatus } from './build';
 import File from './file';
 import Settings from './settings';
