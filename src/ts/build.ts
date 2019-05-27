@@ -38,7 +38,7 @@ export default class Build {
 
         const reportedStatus = await game.readRpt(game.latestRpt);
 
-        game.close();
+        await game.close();
 
         fs.rmdirSync(unpackedDirectory);
 
