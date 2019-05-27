@@ -1,52 +1,71 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
-let mainWindow: Electron.BrowserWindow | undefined;
+export default class Main {
+    public mainWindow?: Electron.BrowserWindow;
 
-function createWindow() {
-    mainWindow = new BrowserWindow({
-        height: 800,
-        webPreferences: {
-            nodeIntegration: true,
-        },
-        width: 1000,
-    });
+    constructor() {
+        app.on('ready', () => {
+            this.createWindow();
+            this.registerEvents();
+            this.installTools();
+        });
 
-    mainWindow.loadFile(path.join(__dirname, '../html/index.html'));
-
-    mainWindow.on('close', () => {
-        // TODO: Save chart data to settings
-        if (mainWindow) {
-            mainWindow.webContents.send('chart-save');
-        }
-    });
-
-    mainWindow.on('closed', () => {
-        mainWindow = undefined;
-    });
-
-    if (process.env.NODE_ENV !== 'production' && !process.env.VSCODE_DEBUG) {
-        const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
-
-        installExtension(VUEJS_DEVTOOLS).then(() => {
-            if (mainWindow) {
-                mainWindow.webContents.openDevTools();
+        app.on('window-all-closed', () => {
+            if (process.platform !== 'darwin') {
+                app.quit();
             }
-        // tslint:disable-next-line: no-console
-        }).catch((err: Error) => console.error(err));
+        });
+
+        app.on('activate', () => {
+            if (! this.mainWindow) {
+                this.createWindow();
+            }
+        });
+    }
+
+    public createWindow() {
+        const window = new BrowserWindow({
+            height: 800,
+            webPreferences: {
+                nodeIntegration: true,
+            },
+            width: 1000,
+        });
+
+        window.loadFile(path.join(__dirname, '../html/index.html'));
+
+        this.mainWindow = window;
+    }
+
+    private registerEvents() {
+        if (this.mainWindow) {
+            this.mainWindow.on('close', () => {
+                // TODO: Save chart data to settings
+                if (this.mainWindow) {
+                    this.mainWindow.webContents.send('chart-save');
+                }
+            });
+
+            this.mainWindow.on('closed', () => {
+                this.mainWindow = undefined;
+            });
+        }
+    }
+
+    private installTools() {
+        if (process.env.NODE_ENV !== 'production' && !process.env.VSCODE_DEBUG) {
+            const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
+
+            installExtension(VUEJS_DEVTOOLS).then(() => {
+                if (this.mainWindow) {
+                    this.mainWindow.webContents.openDevTools();
+                }
+                // tslint:disable-next-line: no-console
+            }).catch((err: Error) => console.error(err));
+        }
     }
 }
 
-app.on('ready', createWindow);
-
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
-
-app.on('activate', () => {
-    if (! mainWindow) {
-        createWindow();
-    }
-});
+// tslint:disable-next-line: no-unused-expression
+new Main();
