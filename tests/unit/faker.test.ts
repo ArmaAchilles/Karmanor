@@ -4,20 +4,8 @@ import * as path from 'path';
 
 import { tmpdir } from 'os';
 import { Tail } from 'tail';
-import File from '../../src/ts/file';
 
 import Faker from '../../src/ts/faker';
-
-afterAll(() => {
-    // Empty temp dir of test stuff
-    const allDirs = File.getAllDirectories(tmpdir());
-
-    allDirs.forEach(directory => {
-        if (directory.includes('karmanor')) {
-            fse.remove(directory);
-        }
-    });
-});
 
 test('A temp dir can be created and it exists', () => {
     const tempDir = Faker.createTempDirectory();
