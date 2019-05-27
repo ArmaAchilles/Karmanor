@@ -36,7 +36,7 @@ export default class Build {
 
         game.start();
 
-        const reportedStatus = await game.readRpt();
+        const reportedStatus = await game.readRpt(game.latestRpt);
 
         game.close();
 
