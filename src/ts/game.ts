@@ -59,10 +59,8 @@ export default class Game implements IGame {
     }
 
     public readRpt(): Promise<EBuildStatus> {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             const tail = new Tail(this.latestRpt);
-
-            tail.on('error', error => reject(error));
 
             tail.on('line', text => {
                 if (text.includes('Karmanor: Build failed.')) {
@@ -90,7 +88,6 @@ export default class Game implements IGame {
 
             // 10 minutes timeout if something went wrong
             setTimeout(() => {
-                tail.on('error', error => reject(error));
                 tail.unwatch();
 
                 resolve(EBuildStatus.broken);
