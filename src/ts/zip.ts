@@ -1,7 +1,8 @@
-import * as extract from 'extract-zip';
 import * as fs from 'fs';
 import * as path from 'path';
 import File from './file';
+
+const extract = require('extract-zip');
 
 export default class Zip {
     public static remove(filepath: string) {
@@ -15,7 +16,8 @@ export default class Zip {
             extract(zipFilepath, {
                 dir: unpackDirectory,
             }, (error: Error | undefined) => {
-                if (error) { reject(error); }
+                // tslint:disable-next-line: newline-before-return
+                if (error) { reject(error); return; }
                 resolve(unpackDirectory);
             });
         });
