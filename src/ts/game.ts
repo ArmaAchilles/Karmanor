@@ -5,6 +5,7 @@ import { Tail } from 'tail';
 import { EBuildStatus } from './build';
 import File from './file';
 import Settings from './settings';
+import { reject } from 'q';
 
 const kill = require('tree-kill');
 
@@ -62,6 +63,8 @@ export default class Game implements IGame {
         return new Promise(resolve => {
             const tail = new Tail(this.latestRpt);
 
+            tail.on('error', error => reject(error));
+
             tail.on('line', text => {
                 if (text.includes('Karmanor: Build failed.')) {
                     tail.unwatch();
@@ -88,6 +91,7 @@ export default class Game implements IGame {
 
             // 10 minutes timeout if something went wrong
             setTimeout(() => {
+                tail.on('error', error => reject(error));
                 tail.unwatch();
 
                 resolve(EBuildStatus.broken);
