@@ -99,7 +99,7 @@ describe('Game.latestRpt', () => {
 
             expect(File.getLatestFile(File.directoryFromFilepath(rpts[0]))).toBe(rpts[1]);
             done();
-        }, 500);
+        }, 1150);
 
         mock.mockRestore();
     });
