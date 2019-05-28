@@ -90,7 +90,7 @@ describe('Game.latestRpt', () => {
 
         const game = new Game(Game.getIGame(), 'some/dir');
 
-        const rpt = game.latestRpt;
+        const rpt = game.latestRpt();
 
         expect(fs.existsSync(rpt)).toBe(true);
 

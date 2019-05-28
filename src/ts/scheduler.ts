@@ -48,12 +48,11 @@ export default class Scheduler {
     private setNextCurrentBuild(): void {
         if (this.builds) {
             const pendingBuild = _.find(this.builds, (build: Build) => {
-                return build.getStatus() === EBuildStatus.pending;
+                return build.status === EBuildStatus.pending;
             });
 
             if (pendingBuild) {
                 this.setCurrentBuild(pendingBuild);
-
             }
         }
     }

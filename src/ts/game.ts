@@ -30,7 +30,7 @@ export default class Game implements IGame {
         this.rptDirectory = game.rptDirectory;
     }
 
-    public get latestRpt(): string {
+    public latestRpt(): string {
         return File.getLatestFile(this.rptDirectory);
     }
 

@@ -2,7 +2,7 @@ import * as fs from 'fs-extra';
 import * as _ from 'lodash';
 import * as os from 'os';
 import * as path from 'path';
-import Build from './build';
+import { IBuild } from './build';
 import Faker from './faker';
 
 export default class Settings {
@@ -225,7 +225,7 @@ export interface ISetting<V> {
 
 export interface ISettings {
     accessToken: ISetting<string>;
-    builds: ISetting<Build[]>;
+    builds: ISetting<IBuild[]>;
     chartsHome: ISetting<IChartHome>;
     downloadDirectory: ISetting<string>;
     gameExecutablePath: ISetting<string>;
