@@ -16,6 +16,10 @@ export default class Faker {
             directory = this.createTempDirectory();
         }
 
+        if (! suffix) {
+            suffix = '';
+        }
+
         const yearMonthDay = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
         const hourMinutesDay = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
         const rptName = `arma3_x64_${yearMonthDay}_${hourMinutesDay}${suffix}.rpt`;
