@@ -18,27 +18,24 @@ export default class File {
     public static getLatestFile(directory: string): string {
         const files = fs.readdirSync(directory);
 
+        if (files.length === 0) { return ''; }
+
         const modificationTimes: { difference: number, filePath: string }[] = [];
+        const dateNow = new Date();
 
         files.forEach(file => {
             const filePath = path.join(directory, file);
 
             const dateCreated = fs.statSync(filePath).ctime;
 
-            const difference = new Date().getTime() - dateCreated.getTime();
+            const difference = dateNow.getTime() - dateCreated.getTime();
 
             modificationTimes.push({
                 difference, filePath,
             });
         });
 
-        const sortedArray = _.sortBy(modificationTimes, ['difference']);
-
-        if (sortedArray.length > 0) {
-            return sortedArray[sortedArray.length - 1].filePath;
-        }
-
-        return '';
+        return _.sortBy(modificationTimes, ['difference'])[0].filePath;
     }
 
     public static isDirectory(possibleDirectory: string): boolean {

@@ -77,15 +77,15 @@ describe('Game.getIGame()', () => {
 });
 
 describe('Game.latestRpt', () => {
-    test('Returns the latest .rpt file', () => {
+    test('Returns the latest .rpt file', done => {
         const tempDir = Faker.createTempDirectory();
-        const rpts = [Faker.createRpt(tempDir, '_1'), Faker.createRpt(tempDir, '_2'), Faker.createRpt(tempDir, '_3')];
+        const rpts = [Faker.createRpt(tempDir, '_1')];
 
         const mock = jest.spyOn(Settings, 'get').mockReturnValue({
             beautifiedName: 'Game .rpt File Directory',
             editable: true,
             key: 'gameRptDirectory',
-            value: File.directoryFromFilepath(rpts[1]),
+            value: File.directoryFromFilepath(rpts[0]),
         });
 
         const game = new Game(Game.getIGame(), 'some/dir');
@@ -94,7 +94,12 @@ describe('Game.latestRpt', () => {
 
         expect(fs.existsSync(rpt)).toBe(true);
 
-        expect(File.getLatestFile(File.directoryFromFilepath(rpts[1]))).toBe(rpts[2]);
+        setTimeout(() => {
+            rpts.push(Faker.createRpt(tempDir, '_2'));
+
+            expect(File.getLatestFile(File.directoryFromFilepath(rpts[0]))).toBe(rpts[1]);
+            done();
+        }, 500);
 
         mock.mockRestore();
     });
