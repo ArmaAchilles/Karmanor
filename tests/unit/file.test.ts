@@ -43,7 +43,7 @@ describe('File.getLatestFile()', () => {
 
             expect(File.getLatestFile(dir)).toBe(files[1]);
             done();
-        }, 500);
+        }, 1150);
     });
 
     test('It returns empty string if no file is found', () => {
