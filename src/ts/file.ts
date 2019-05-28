@@ -32,7 +32,13 @@ export default class File {
             });
         });
 
-        return _.sortBy(modificationTimes, ['difference'])[0].filePath;
+        const sortedArray = _.sortBy(modificationTimes, ['difference']);
+
+        if (sortedArray.length > 0) {
+            return sortedArray[sortedArray.length - 1].filePath;
+        }
+
+        return '';
     }
 
     public static isDirectory(possibleDirectory: string): boolean {

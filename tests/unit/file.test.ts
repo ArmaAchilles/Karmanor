@@ -34,16 +34,17 @@ describe('File.directoryFromFilepath()', () => {
 });
 
 describe('File.getLatestFile()', () => {
-    test('It returns latest file from two files', done => {
+    test('It returns latest file from two files', () => {
         const dir = Faker.createTempDirectory();
-        Faker.file('txt', dir);
+        const files = [Faker.createRpt(dir, '_1'), Faker.createRpt(dir, '_2')];
 
-        setTimeout(() => {
-            const newest = Faker.file('txt', dir);
+        expect(File.getLatestFile(dir)).toBe(files[1]);
+    });
 
-            expect(File.getLatestFile(dir)).toBe(newest);
-            done();
-        }, 50);
+    test('It returns empty string if no file is found', () => {
+        const dir = Faker.createTempDirectory();
+
+        expect(File.getLatestFile(dir)).toBe('');
     });
 });
 
