@@ -158,6 +158,8 @@ describe('The server emits different status codes for requests', () => {
         expect(fs.existsSync(zipPath)).toBe(true);
 
         const form = new FormData();
+        form.append('commitHash', 'someHash');
+        form.append('commitName', 'someName');
         form.append('zip', fs.createReadStream(zipPath));
 
         axios.post(address, form, {
@@ -177,6 +179,8 @@ describe('The server emits different status codes for requests', () => {
 
         const form = new FormData();
         form.append('accessToken', 'someAccessToken1234');
+        form.append('commitHash', 'someHash');
+        form.append('commitName', 'someName');
 
         axios.post(address, form, {
             headers: form.getHeaders(),
@@ -193,6 +197,8 @@ describe('The server emits different status codes for requests', () => {
 
         const form = new FormData();
         form.append('accessToken', 'someRandomToken1234');
+        form.append('commitHash', 'someHash');
+        form.append('commitName', 'someName');
         form.append('zip', fs.createReadStream(await Faker.zip()));
 
         axios.post(address, form, {
@@ -212,12 +218,92 @@ describe('The server emits different status codes for requests', () => {
 
         const form = new FormData();
         form.append('accessToken', 'aToken');
+        form.append('commitHash', 'someHash');
+        form.append('commitName', 'someName');
         form.append('zip', fs.createReadStream(await Faker.zip()));
 
         axios.post(address, form, {
             headers: form.getHeaders(),
         }).then(response => {
             expect(response.status).toBe(EHttpStatus.ok);
+
+            done();
+        });
+    });
+
+    test('Passing no commit hash and zip results in bad request', async done => {
+        createdServer.isRequestValid = jest.fn().mockReturnValue(true);
+
+        await createdServer.start();
+
+        const form = new FormData();
+        form.append('accessToken', 'someAccessToken1234');
+        form.append('commitName', 'someName');
+        form.append('zip', fs.createReadStream(await Faker.zip()));
+
+        axios.post(address, form, {
+            headers: form.getHeaders(),
+            validateStatus: status => status === EHttpStatus.badRequest,
+        }).then(response => {
+            expect(response.status).toBe(EHttpStatus.badRequest);
+
+            done();
+        });
+    });
+
+    test('Passing no commit name and zip results in bad request', async done => {
+        createdServer.isRequestValid = jest.fn().mockReturnValue(true);
+
+        await createdServer.start();
+
+        const form = new FormData();
+        form.append('accessToken', 'someAccessToken1234');
+        form.append('commitHash', 'someHash');
+        form.append('zip', fs.createReadStream(await Faker.zip()));
+
+        axios.post(address, form, {
+            headers: form.getHeaders(),
+            validateStatus: status => status === EHttpStatus.badRequest,
+        }).then(response => {
+            expect(response.status).toBe(EHttpStatus.badRequest);
+
+            done();
+        });
+    });
+
+    test('Passing no commit hash and no zip results in bad request', async done => {
+        createdServer.isRequestValid = jest.fn().mockReturnValue(true);
+
+        await createdServer.start();
+
+        const form = new FormData();
+        form.append('accessToken', 'someAccessToken1234');
+        form.append('commitName', 'someName');
+
+        axios.post(address, form, {
+            headers: form.getHeaders(),
+            validateStatus: status => status === EHttpStatus.badRequest,
+        }).then(response => {
+            expect(response.status).toBe(EHttpStatus.badRequest);
+
+            done();
+        });
+    });
+
+    test('Passing no commit name and no zip results in bad request', async done => {
+        createdServer.isRequestValid = jest.fn().mockReturnValue(true);
+
+        await createdServer.start();
+
+        const form = new FormData();
+        form.append('accessToken', 'someAccessToken1234');
+        form.append('commitHash', 'someHash');
+
+        axios.post(address, form, {
+            headers: form.getHeaders(),
+            validateStatus: status => status === EHttpStatus.badRequest,
+        }).then(response => {
+            expect(response.status).toBe(EHttpStatus.badRequest);
 
             done();
         });
@@ -239,4 +325,12 @@ test(`The server can't be restarted with this.stop error`, done => {
 
         server.restart().catch(() => done());
     });
+});
+
+test('If fields is undefined commit hash returns undefined', () => {
+    expect(createdServer.commitHash).toBe(undefined);
+});
+
+test('If fields is undefined commit name returns undefined', () => {
+    expect(createdServer.commitName).toBe(undefined);
 });

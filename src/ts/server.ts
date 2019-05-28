@@ -7,6 +7,8 @@ import Settings from './settings';
 
 export interface IFields {
     accessToken: string[];
+    commitHash: string;
+    commitName: string;
 }
 
 export interface IFiles {
@@ -40,6 +42,20 @@ export default class Server {
                     this.files = files;
 
                     if (! this.accessToken) {
+                        if (this.zip) { Zip.remove(this.zip.path); }
+                        this.writeResponse(response, EHttpStatus.badRequest);
+
+                        return;
+                    }
+
+                    if (! this.commitHash) {
+                        if (this.zip) { Zip.remove(this.zip.path); }
+                        this.writeResponse(response, EHttpStatus.badRequest);
+
+                        return;
+                    }
+
+                    if (! this.commitName) {
                         if (this.zip) { Zip.remove(this.zip.path); }
                         this.writeResponse(response, EHttpStatus.badRequest);
 
@@ -143,6 +159,30 @@ export default class Server {
         if (this.fields) {
             if (this.fields.accessToken) {
                 return this.fields.accessToken[0];
+            }
+
+            return undefined;
+        }
+
+        return undefined;
+    }
+
+    get commitHash(): string | undefined {
+        if (this.fields) {
+            if (this.fields.commitHash) {
+                return this.fields.commitHash[0];
+            }
+
+            return undefined;
+        }
+
+        return undefined;
+    }
+
+    get commitName(): string | undefined {
+        if (this.fields) {
+            if (this.fields.commitName) {
+                return this.fields.commitName[0];
             }
 
             return undefined;
