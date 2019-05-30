@@ -4,56 +4,54 @@ import Build, { EBuildStatus } from './build';
 import { events } from './flash';
 
 export default class Scheduler {
-    private builds: Build[] = [];
-    private currentBuild?: Build;
+    public builds: Build[] = [];
+    public currentBuild?: Build;
 
-    public add(build: Build): void {
-        this.builds.push(build);
+    public add(build: Build): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.builds.push(build);
 
-        if (! this.currentBuild) {
-            this.setCurrentBuild(build);
-        }
+            if (! this.currentBuild) {
+                this.advanceQueue().then(() => resolve()).catch(error => reject(error));
+            }
 
-        events.$emit('scheduler-added', this);
-    }
-
-    public remove(build: Build): void {
-        _.pull(this.builds, build);
-
-        events.$emit('scheduler-removed', this);
-    }
-
-    public getAll(): Build[] {
-        return this.builds;
-    }
-
-    private clearCurrentBuild(): void {
-        if (this.currentBuild) {
-            this.remove(this.currentBuild);
-            this.currentBuild = undefined;
-        }
-    }
-
-    private setCurrentBuild(build: Build): void {
-        this.currentBuild = build;
-
-        build.start().then(() => {
-            this.clearCurrentBuild();
-            this.setNextCurrentBuild();
+            events.$emit('scheduler-added', this);
         });
-
-        events.$emit('scheduler-new-build', this);
     }
 
-    private setNextCurrentBuild(): void {
-        if (this.builds) {
+    public setCurrentBuild(build: Build): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.currentBuild = build;
+
+            events.$emit('scheduler-new-build', this);
+
+            build.start().then(() => {
+                this.currentBuild = undefined;
+                this.advanceQueue();
+
+                resolve();
+            }).catch(error => {
+                this.currentBuild = undefined;
+                this.advanceQueue();
+
+                reject(error);
+                events.$emit('scheduler-build-errored', this);
+            });
+        });
+    }
+
+    public advanceQueue(): Promise<void> {
+        return new Promise((resolve, reject) => {
             const pendingBuild = _.find(this.builds, (build: Build) => {
                 return build.status === EBuildStatus.pending;
             });
 
             if (pendingBuild) {
-                this.setCurrentBuild(pendingBuild);
+                this.setCurrentBuild(pendingBuild).then(() => resolve())
+                    .catch(error => reject(error));
+            } else {
+                resolve();
             }
-        }
+        });
     }
 }

@@ -40,7 +40,7 @@ export default class Game implements IGame {
         });
     }
 
-    public close(): Promise<undefined> {
+    public close(): Promise<void> {
         return new Promise(resolve => {
             // If process has already exited
             // tslint:disable-next-line: newline-before-return

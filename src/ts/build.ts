@@ -26,7 +26,7 @@ export default class Build {
     }
 
     public async start(): Promise<EBuildStatus> {
-        return new Promise(async resolve => {
+        try {
             const gameSettings = Game.getIGame();
 
             events.$emit('build-started', this);
@@ -45,16 +45,20 @@ export default class Build {
             await game.close();
 
             const rptPath = game.latestRpt();
-            const reportedStatus = await game.readRpt(rptPath);
+            const status = await game.readRpt(rptPath);
 
             fs.removeSync(unpackedDirectory);
 
-            this.setStatus(reportedStatus);
+            this.setStatus(status);
 
-            await this.save(rptPath);
+            await this.saveFromRpt(rptPath);
 
-            resolve(reportedStatus);
-        });
+            return Promise.resolve(status);
+        } catch (error) {
+            this.errorBuild();
+
+            return Promise.reject(error);
+        }
     }
 
     public lastBuildStatus(): EBuildStatus | undefined {
@@ -88,32 +92,43 @@ export default class Build {
         events.$emit('build-finished', this);
     }
 
-    private async save(rptPath: string): Promise<boolean> {
+    private async saveFromRpt(rptPath: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            // tslint:disable-next-line: variable-name
+            fs.readFile(rptPath, (_error, rptBuffer) => {
+                this.save(rptBuffer).then(didSave => resolve(didSave)).catch(error => reject(error));
+            });
+        });
+    }
+
+    private save(rptBuffer?: Buffer): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const builds = Settings.get('builds');
 
-            // tslint:disable-next-line: variable-name
-            fs.readFile(rptPath, (_error, rptBuffer) => {
-                const data = {
-                    gitHash: this.commitHash,
-                    id: builds.value ? builds.value.length + 1 : 1,
-                    name: this.commitName,
-                    rpt: rptBuffer.toString(),
-                    status: this.status,
-                    timeCreated: this.timeCreated,
-                    timeFinished: this.timeFinished || new Date(),
-                };
+            const data = {
+                gitHash: this.commitHash,
+                id: builds.value ? builds.value.length + 1 : 1,
+                name: this.commitName,
+                rpt: rptBuffer ? rptBuffer.toString() : '',
+                status: this.status,
+                timeCreated: this.timeCreated,
+                timeFinished: this.timeFinished || new Date(),
+            };
 
-                if (builds.value) {
-                    builds.value.push(data);
-                } else {
-                    builds.value = [data];
-                }
+            if (builds.value) {
+                builds.value.push(data);
+            } else {
+                builds.value = [data];
+            }
 
-                Settings.set('builds', builds.value).then(saved => resolve(saved))
-                    .catch(err => reject(err));
-            });
+            Settings.set('builds', builds.value).then(saved => resolve(saved))
+                .catch(err => reject(err));
         });
+    }
+
+    private errorBuild() {
+        this.status = EBuildStatus.broken;
+        this.save();
     }
 }
 

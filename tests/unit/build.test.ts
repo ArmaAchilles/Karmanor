@@ -4,6 +4,7 @@ import Build, { EBuildStatus, IBuild } from '../../src/ts/build';
 import Faker from '../../src/ts/faker';
 import File from '../../src/ts/file';
 import Settings from '../../src/ts/settings';
+import Zip from '../../src/ts/zip';
 
 import Game from '../../src/ts/game';
 jest.mock('../../src/ts/game');
@@ -41,6 +42,63 @@ describe('Build.start()', () => {
 
         iGame.mockRestore();
         settingsSave.mockRestore();
+        gameStart.mockRestore();
+        gameClose.mockRestore();
+        gameLastRpt.mockRestore();
+        gameReadRpt.mockRestore();
+    });
+
+    test('If any await rejects then it errors build and rejects promise', async done => {
+        const error = new Error('Test error');
+
+        const zip = await Faker.zip();
+        const rptDir = Faker.createTempDirectory();
+        const gameDir = Faker.createTempDirectory();
+        const rpt = Faker.createRpt(rptDir);
+
+        const build = new Build(zip, 'someHash', 'someName');
+
+        const iGame = jest.spyOn(Game, 'getIGame').mockReturnValue({
+            executablePath: gameDir,
+            parameters: '',
+            rptDirectory: rptDir,
+        });
+
+        const settingsSave = jest.spyOn(Settings, 'set').mockResolvedValue(true);
+        const gameStart = jest.spyOn(Game.prototype, 'start');
+        const gameClose = jest.spyOn(Game.prototype, 'close').mockResolvedValue(undefined);
+        const gameLastRpt = jest.spyOn(Game.prototype, 'latestRpt').mockReturnValue(rpt);
+        const gameReadRpt = jest.spyOn(Game.prototype, 'readRpt').mockResolvedValue(EBuildStatus.passed);
+        const zipMock = jest.spyOn(Zip, 'unpack').mockRejectedValue(error);
+
+        // @ts-ignore Private method
+        build.errorBuild = jest.fn();
+
+        build.start().catch(err => {
+            expect(err).toBe(error);
+
+            expect(iGame).toBeCalledTimes(1);
+
+            // @ts-ignore Private method
+            expect(build.errorBuild).toHaveBeenCalledTimes(1);
+            expect(zipMock).toBeCalledTimes(1);
+
+            expect(settingsSave).not.toBeCalled();
+            expect(gameStart).not.toBeCalled();
+            expect(gameClose).not.toBeCalled();
+            expect(gameLastRpt).not.toBeCalled();
+            expect(gameReadRpt).not.toBeCalled();
+
+            iGame.mockRestore();
+            settingsSave.mockRestore();
+            gameStart.mockRestore();
+            gameClose.mockRestore();
+            gameLastRpt.mockRestore();
+            gameReadRpt.mockRestore();
+            zipMock.mockRestore();
+
+            done();
+        });
     });
 });
 
@@ -166,7 +224,7 @@ describe('Build.save()', () => {
         const build = new Build('some', 'thing', 'important');
 
         // @ts-ignore Private method
-        await build.save(rpt);
+        await build.save(fs.readFileSync(rpt));
 
         expect(settingsSet).toHaveBeenCalledWith('builds', [{
             gitHash: 'thing',
@@ -201,5 +259,154 @@ describe('Build.save()', () => {
 
         settingsGet.mockRestore();
         settingsSet.mockRestore();
+    });
+
+    test('If rptBuffer is undefined then it is saved with as an empty string', async () => {
+        const settingsGet = jest.spyOn(Settings, 'get').mockReturnValue({
+            value: undefined,
+        } as any);
+        const settingsSet = jest.spyOn(Settings, 'set');
+
+        const rpt = Faker.createRpt();
+        File.appendToFile(rpt, 'This is a test.');
+
+        const build = new Build('some', 'thing', 'important');
+
+        // @ts-ignore Private method
+        await build.save();
+
+        expect(settingsSet).toHaveBeenCalledWith('builds', [{
+            gitHash: 'thing',
+            id: 1,
+            name: 'important',
+            rpt: '',
+            status: EBuildStatus.pending,
+            timeCreated: build.timeCreated,
+            timeFinished: jasmine.any(Date),
+        }]);
+
+        settingsGet.mockRestore();
+        settingsSet.mockRestore();
+    });
+
+    test('If everything is given then it saves properly', async () => {
+        const data = {
+            gitHash: 'thing',
+            id: 1,
+            name: 'important',
+            rpt: '',
+            status: EBuildStatus.pending,
+            timeCreated: new Date(),
+            timeFinished: new Date(),
+        };
+
+        const settingsGet = jest.spyOn(Settings, 'get').mockReturnValue({
+            value: [data] as IBuild[],
+        } as any);
+        const settingsSet = jest.spyOn(Settings, 'set');
+
+        const rpt = Faker.createRpt();
+        File.appendToFile(rpt, 'This is a test.');
+
+        const build = new Build('some', 'thing', 'important');
+
+        // @ts-ignore Private method
+        await build.save(fs.readFileSync(rpt));
+
+        expect(settingsSet).toHaveBeenCalledWith('builds', [data, {
+            gitHash: 'thing',
+            id: 2,
+            name: 'important',
+            rpt: fs.readFileSync(rpt).toString(),
+            status: EBuildStatus.pending,
+            timeCreated: build.timeCreated,
+            timeFinished: jasmine.any(Date),
+        }]);
+
+        settingsGet.mockRestore();
+        settingsSet.mockRestore();
+    });
+});
+
+describe('Build.errorBuild()', () => {
+    test('It sets build status to broken and saves it to settings', () => {
+        const build = new Build('some', 'thing', 'important');
+
+        // @ts-ignore Private method
+        build.save = jest.fn();
+
+        expect(build.status).toBe(EBuildStatus.pending);
+
+        // @ts-ignore Private method
+        expect(build.save).not.toBeCalled();
+
+        // @ts-ignore Private method
+        build.errorBuild();
+
+        expect(build.status).toBe(EBuildStatus.broken);
+
+        // @ts-ignore Private method
+        expect(build.save).toBeCalledTimes(1);
+    });
+});
+
+describe('Build.saveFromRpt()', () => {
+    test('If read file then calls Build.save() and resolves with true', async () => {
+        const build = new Build('some', 'thing', 'important');
+        const rptFile = Faker.createRpt();
+
+        // @ts-ignore Private method
+        build.save = jest.fn().mockResolvedValue(true);
+
+        // @ts-ignore Private method
+        const didSave = await build.saveFromRpt(rptFile);
+
+        expect(didSave).toBe(true);
+
+        // @ts-ignore Private method
+        expect(build.save).toBeCalledTimes(1);
+
+        // @ts-ignore Private method
+        expect(build.save).toBeCalledWith(jasmine.any(Buffer));
+    });
+
+    test('If read file then calls Build.save() and it does not update anything, resolves with false', async () => {
+        const build = new Build('some', 'thing', 'important');
+        const rptFile = Faker.createRpt();
+
+        // @ts-ignore Private method
+        build.save = jest.fn().mockResolvedValue(false);
+
+        // @ts-ignore Private method
+        const didSave = await build.saveFromRpt(rptFile);
+
+        expect(didSave).toBe(false);
+
+        // @ts-ignore Private method
+        expect(build.save).toBeCalledTimes(1);
+
+        // @ts-ignore Private method
+        expect(build.save).toBeCalledWith(jasmine.any(Buffer));
+    });
+
+    test('If read file then calls Build.save() and it rejects then this rejects', done => {
+        const build = new Build('some', 'thing', 'important');
+        const rptFile = Faker.createRpt();
+        const error = new Error('Test error');
+
+        // @ts-ignore Private method
+        build.save = jest.fn().mockRejectedValue(error);
+
+        // @ts-ignore Private method
+        build.saveFromRpt(rptFile).catch(err => {
+            expect(err).toBe(error);
+
+            // @ts-ignore Private method
+            expect(build.save).toBeCalledTimes(1);
+
+            // @ts-ignore Private method
+            expect(build.save).toBeCalledWith(jasmine.any(Buffer));
+            done();
+        });
     });
 });
