@@ -32,4 +32,9 @@ module.exports = {
     ],
 
     globalTeardown: '<rootDir>/tests/teardown.ts',
+
+    moduleNameMapper: {
+        'electron-devtools-installer': '<rootDir>/tests/mocks/electron-devtools-installer.ts',
+        'electron': '<rootDir>/tests/mocks/electron.ts',
+    },
 };
