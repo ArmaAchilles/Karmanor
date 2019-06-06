@@ -50,7 +50,7 @@
     "@types/multiparty": "0.0.32",
     "@types/tail": "^1.2.1",
     "@types/webpack-env": "^1.13.9",
-    "animate.css": "^3.7.0",
+    "animate.css": "^3.7.2",
     "axios": "^0.19.0",
     "babel-plugin-istanbul": "^5.1.4",
     "bootstrap": "^4.3.1",
