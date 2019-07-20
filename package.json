@@ -72,7 +72,7 @@
     "jszip": "^3.2.1",
     "laravel-mix": "^4.0.15",
     "line-reader": "^0.4.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "multiparty": "^4.2.1",
     "node-sass": "^4.12.0",
     "popper.js": "^1.15.0",
