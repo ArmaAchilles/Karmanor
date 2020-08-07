@@ -46,7 +46,7 @@
     "@types/jquery": "^3.3.29",
     "@types/jszip": "^3.1.6",
     "@types/line-reader": "0.0.28",
-    "@types/lodash": "^4.14.132",
+    "@types/lodash": "^4.14.159",
     "@types/multiparty": "0.0.32",
     "@types/tail": "^1.2.1",
     "@types/webpack-env": "^1.13.9",
